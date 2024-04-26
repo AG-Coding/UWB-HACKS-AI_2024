@@ -1,0 +1,2 @@
+# UWB-HACKS-AI_2024
+Hackaton
