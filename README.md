@@ -1,2 +1,2 @@
 # UWB-HACKS-AI_2024
-Hackaton
+Hackaton, we cooking everyone fr
