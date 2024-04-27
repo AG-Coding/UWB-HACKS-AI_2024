@@ -1,4 +1,3 @@
-let mediaRecorder;
 let recordedChunks = [];
 let videoElement = document.getElementById("videoElement");
 let startRecordingBtn = document.getElementById("startRecordingBtn");
@@ -37,16 +36,11 @@ function startWebcam() {
       };
     })
     .catch(function(err) {
-      console.error("Error accessing webcam:", err);
+      console.log(err.name + ": " + err.message);
     });
 }
 
 function startRecording() {
-  if (!mediaRecorder) {
-    console.error("MediaRecorder not initialized.");
-    return;
-  }
-
   recordedChunks = [];
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
@@ -54,11 +48,6 @@ function startRecording() {
 }
 
 function stopRecording() {
-  if (!mediaRecorder) {
-    console.error("MediaRecorder not initialized.");
-    return;
-  }
-
   mediaRecorder.stop();
   startRecordingBtn.disabled = false;
   stopRecordingBtn.disabled = true;

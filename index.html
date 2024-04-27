@@ -3,23 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Web Application</title>
-  <!-- Include face-api.js from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+  <title>Emotion Detection</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* Your CSS styles here */
+    iframe {
+      display: block;
+      width: 100%; /* Adjust width as needed */
+      height: 100vh; /* Adjust height as needed */
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
   </style>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
   <div class="tab-container">
-    <button class="tablinks" onclick="openTab(event, 'Tab1')">Tab 1</button>
+    <button class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
     <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
     <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
   </div>
 
   <div id="Tab1" class="tabcontent">
-    <h3>Tab 1 Content</h3>
-    <p>This is the content of Tab 1.</p>
+    <!-- IFRAME CONTENT -->
+    <iframe src="downright intrepid hummingbird-html (1)/index.html"></iframe>
   </div>
 
   <div id="Tab2" class="tabcontent">
@@ -45,85 +52,11 @@
     </div>
   </div>
 
-  <script>
-    let mediaRecorder;
-    let recordedChunks = [];
-    let videoElement = document.getElementById("videoElement");
-    let startRecordingBtn = document.getElementById("startRecordingBtn");
-    let stopRecordingBtn = document.getElementById("stopRecordingBtn");
-    let playRecordingBtn = document.getElementById("playRecordingBtn");
-
-    // Wait for DOM content to be fully loaded
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Start facial detection
-      startWebcam();
-    });
-
-    function openTab(evt, tabName) {
-      let tabcontent = document.getElementsByClassName("tabcontent");
-      for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-
-      let tablinks = document.getElementsByClassName("tablinks");
-      for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-      }
-
-      document.getElementById(tabName).style.display = "block";
-      evt.currentTarget.classList.add("active");
-
-      if (tabName === "Tab3") {
-        startWebcam();
-      }
-    }
-
-    function startWebcam() {
-      let constraints = { video: true, audio: true };
-
-      navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(mediaStream) {
-          videoElement.srcObject = mediaStream;
-          mediaRecorder = new MediaRecorder(mediaStream);
-
-          mediaRecorder.ondataavailable = function(event) {
-            recordedChunks.push(event.data);
-          };
-
-          // Start facial detection
-          startFaceDetection();
-        })
-        .catch(function(err) {
-          console.log(err.name + ": " + err.message);
-        });
-    }
-
-    async function startFaceDetection() {
-      // Face detection code using face-api.js
-      // Add your code here
-    }
-
-    function startRecording() {
-      recordedChunks = [];
-      mediaRecorder.start();
-      startRecordingBtn.disabled = true;
-      stopRecordingBtn.disabled = false;
-    }
-
-    function stopRecording() {
-      mediaRecorder.stop();
-      startRecordingBtn.disabled = false;
-      stopRecordingBtn.disabled = true;
-    }
-
-    function playRecording() {
-      let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
-      let recordedUrl = URL.createObjectURL(recordedBlob);
-      let videoPlayer = document.createElement("video");
-      videoPlayer.src = recordedUrl;
-      videoPlayer.controls = true;
-      videoElement.parentElement.appendChild(videoPlayer);
-    }
-  </script>
+  <!-- Include TensorFlow.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  
+  <!-- Your custom scripts -->
+  <script src="script.js"></script>
+  <script src="emotion_detection.js"></script>
 </body>
 </html>
