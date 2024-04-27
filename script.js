@@ -29,6 +29,7 @@ recognition.onresult = function(event) {
 
   function analyzeSpeech(transcript) {
     stopRecording();
+    stopWebcam();
     recognition.stop();
     const words = transcript.split(' ');
     const wordCount = words.length;
@@ -115,7 +116,6 @@ recognition.onresult = function(event) {
         feedback += `Fluency score: ${fluencyScore.toFixed(2)}\n`;
         feedback += `Confidence: ${confidence.toFixed(2)}%\n`;
         feedback += `Vocabulary richness: ${vocabularyRichness.toFixed(2)}%\n`;
-        //feedback += `Sentiment: ${sentiment}\n`;
   
         if (confidence < 50) {
           feedback += `Your speech confidence seems low. Try to speak more confidently and clearly.\n`;
@@ -213,8 +213,8 @@ function startRecording() {
   
   recognition.start();
 
-  // Start the silence timer
-  silenceTimer = setInterval(checkSilence, 5000); // Check every 5 seconds
+  // // Start the silence timer
+  // silenceTimer = setInterval(checkSilence, 5000); // Check every 5 seconds
 }
 
 function stopRecording() {
@@ -225,15 +225,6 @@ function stopRecording() {
     startRecordingBtn.disabled = false;
     stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
-  }
-}
-function checkSilence() {
-  const currentTime = Date.now();
-  const timeSinceLastSpeech = currentTime - lastSpeechTime;
-
-  // If 1 minute has passed since last speech input, stop recording
-  if (isRecording && timeSinceLastSpeech >= 60000) {
-    stopRecording();
   }
 }
 
@@ -271,9 +262,9 @@ function playRecording() {
 }
 
 function stopWebcam() {
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stream.getTracks().forEach(track => {
-      track.stop();
-    });
+  if (videoElement.srcObject) {
+    let tracks = videoElement.srcObject.getTracks();
+    tracks.forEach(track => track.stop());
+    videoElement.srcObject = null;
   }
 }
