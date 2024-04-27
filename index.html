@@ -24,13 +24,14 @@
 
   <div id="Tab3" class="tabcontent">
     <div class="split">
-      <div id="video-container" class="split-item">
+      <div id="video-container">
         <video id="videoElement" autoplay></video>
+        <canvas id="overlayCanvas" width="640" height="480"></canvas>
         <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
         <button id="stopRecordingBtn" onclick="stopRecording()">Stop Recording</button>
         <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
       </div>
-      <div id="avatar-container" class="split-item">
+      <div id="avatar-container">
         <!-- Placeholder for 2D avatar -->
         <div id="avatar-2d">
           <!-- Placeholder image for 2D avatar -->
@@ -40,6 +41,7 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/@vladmandic/face-api"></script>
   <script src="script.js"></script>
 </body>
 </html>
