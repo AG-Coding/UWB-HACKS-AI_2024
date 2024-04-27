@@ -98,7 +98,7 @@ recognition.onresult = function(event) {
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
   // Calculate fluency score
-  const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.3) - (pauseCount * 0.2);
+  const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3);
 
   const confidence = Math.min(100, Math.max(0, fluencyScore)) * 10; // Scale to a 0-100 range
   
@@ -179,9 +179,11 @@ function openTab(evt, tabName) {
   if (tabName === "Tab3") {
     startWebcam();
   } else {
-    stopWebcam();
+    stopWebcam(); // Stop the webcam stream if not on Tab3
+    stopRecording(); // Stop recording if not on Tab3
   }
 }
+
 
 function startWebcam() {
   console.log("webcam turns on!");
