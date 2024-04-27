@@ -1,3 +1,4 @@
+
 let mediaRecorder;
 let recordedChunks = [];
 let videoElement = document.getElementById("videoElement");
@@ -97,7 +98,7 @@ recognition.onresult = function(event) {
   // Calculate fluency score
   const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.3) - (pauseCount * 0.2);
 
-  const confidence = calculateConfidence(fluencyScore, vocabularyRichness);
+  const confidence = Math.min(100, Math.max(0, fluencyScore)) * 10; // Scale to a 0-100 range
   
         // Calculate vocabulary richness (example)
         const uniqueWords = new Set(words);
@@ -128,12 +129,6 @@ recognition.onresult = function(event) {
         showPopup(feedback, transcript);
   }  
 
-  function calculateConfidence(fluencyScore, vocabularyRichness) {
-    let confidence = (fluencyScore + vocabularyRichness) / 2;
-    confidence = Math.min(100, Math.max(0, confidence) * 10); // Ensure confidence is within 0 to 100 range
-    return confidence;
-  }
-  
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
