@@ -178,6 +178,8 @@ function openTab(evt, tabName) {
 
   if (tabName === "Tab3") {
     startWebcam();
+  } else {
+    stopWebcam();
   }
 }
 
