@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Split Screen</title>
+  <title>Split Screen with Webcam and Avatars</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,18 +24,20 @@
   </div>
 
   <div id="Tab3" class="tabcontent">
-    <h3>Split Screen: Webcam and Avatar</h3>
+    <h3>Split Screen: Webcam and Avatars</h3>
     <div class="split">
-      <div id="video-container">
-        <!-- Placeholder for webcam video -->
+      <div id="video-container" class="split-item">
         <video id="videoElement" autoplay></video>
         <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
         <button id="stopRecordingBtn" onclick="stopRecording()">Stop Recording</button>
         <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
       </div>
-      <div id="avatar-container">
-        <!-- Placeholder for 3D avatar -->
-        <div id="avatar"></div>
+      <div id="avatar-container" class="split-item">
+        <!-- Placeholder for 2D avatar -->
+        <div id="avatar-2d">
+          <!-- Placeholder image for 2D avatar -->
+          <img src="avatar.jpeg" alt="2D Avatar">
+        </div>
       </div>
     </div>
   </div>
