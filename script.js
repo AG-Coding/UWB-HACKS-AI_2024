@@ -204,6 +204,8 @@ function startWebcam() {
 }
 
 function startRecording() {
+  startRecording();
+  startWebcam();
   recordedChunks = [];
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
