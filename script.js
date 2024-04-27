@@ -28,6 +28,8 @@ recognition.onresult = function(event) {
 };
 
   function analyzeSpeech(transcript) {
+    stopRecording();
+    recognition.stop();
     const words = transcript.split(' ');
     const wordCount = words.length;
     const totalCharacters = transcript.replace(/\s/g, '').length;
@@ -132,6 +134,8 @@ recognition.onresult = function(event) {
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
+  recognition.stop();
+  document.getElementById('popup').style.display = 'none';
 }
 
 function tryAgain() {
@@ -139,11 +143,14 @@ function tryAgain() {
   startRecordingBtn.disabled = false;
   stopRecordingBtn.disabled = true;
   closePopup();
+  lastSpeechTime = Date.now();
 }
 
 function exit() {
   tryAgain();
   openTab(Event.srcElement, 'Tab1');
+  recognition.stop();
+  stopRecording();
   closePopup();
 }
 
