@@ -24,7 +24,7 @@
 
 <body>
   <div class="tab-container">
-    <button class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
+    <button id="defaultOpen" class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
     <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
     <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
   </div>
@@ -59,6 +59,10 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    // Function to automatically click the defaultOpen button
+    document.getElementById("defaultOpen").click();
+  </script>
 </body>
 
 </html>
