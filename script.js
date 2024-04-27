@@ -112,7 +112,7 @@ recognition.onresult = function(event) {
         feedback += `Fluency score: ${fluencyScore.toFixed(2)}\n`;
         feedback += `Confidence: ${confidence.toFixed(2)}%\n`;
         feedback += `Vocabulary richness: ${vocabularyRichness.toFixed(2)}%\n`;
-        feedback += `Sentiment: ${sentiment}\n`;
+        //feedback += `Sentiment: ${sentiment}\n`;
   
         if (confidence < 50) {
           feedback += `Your speech confidence seems low. Try to speak more confidently and clearly.\n`;
