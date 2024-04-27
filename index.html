@@ -54,6 +54,18 @@
     </div>
   </div>
 
+  <!-- Popup container -->
+  <div id="popup" class="popup-container">
+    <div class="popup-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <div><strong>Transcript:</strong> <span id="transcript"></span></div>
+      <div><strong>Analysis Results:</strong></div>
+      <div id="analysisResults"></div>
+      <button onclick="tryAgain()">Try Again</button>
+      <button onclick="exit()">Exit</button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
