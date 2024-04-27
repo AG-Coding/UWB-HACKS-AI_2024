@@ -4,16 +4,12 @@ let videoElement = document.getElementById("videoElement");
 let startRecordingBtn = document.getElementById("startRecordingBtn");
 let stopRecordingBtn = document.getElementById("stopRecordingBtn");
 let playRecordingBtn = document.getElementById("playRecordingBtn");
-let isPopupActive = false; // Flag to track if the popup is active
+
 let isRecording = false;
 let lastSpeechTime = Date.now();
-let silenceTimer;
-const natural = require('natural');
+let silenceTimer; 
 
-// Load the sentiment analyzer
-const { SentimentAnalyzer } = natural;
-const analyzer = new SentimentAnalyzer('English', natural.PorterStemmer, 'afinn')
-
+const expectedTranscriptLength = 100;
 
 let recognition = new webkitSpeechRecognition();
 recognition.continuous = true;
@@ -29,21 +25,6 @@ recognition.onresult = function(event) {
     }
   }
 };
-
-function analyzeSentiment(text) {
-  // Perform sentiment analysis
-  const result = analyzer.getSentiment(text);
-
-  // Classify sentiment
-  if (result === 'positive') {
-      return 'Positive';
-  } else if (result === 'negative') {
-      return 'Negative';
-  } else {
-      return 'Neutral';
-  }
-}
-
 
   function analyzeSpeech(transcript) {
     const words = transcript.split(' ');
@@ -121,8 +102,7 @@ function analyzeSentiment(text) {
         // Calculate vocabulary richness (example)
         const uniqueWords = new Set(words);
         const vocabularyRichness = (uniqueWords.size / wordCount) * 100;
-
-
+  
         // Prepare feedback message
         let feedback = `Speech analysis:\n`;
         feedback += `Word count: ${wordCount}\n`;
@@ -132,8 +112,8 @@ function analyzeSentiment(text) {
         feedback += `Fluency score: ${fluencyScore.toFixed(2)}\n`;
         feedback += `Confidence: ${confidence.toFixed(2)}%\n`;
         feedback += `Vocabulary richness: ${vocabularyRichness.toFixed(2)}%\n`;
-        feedback += `Sentiment: ${analyzeSentiment(transcript)}\n`;
-
+        feedback += `Sentiment: ${sentiment}\n`;
+  
         if (confidence < 50) {
           feedback += `Your speech confidence seems low. Try to speak more confidently and clearly.\n`;
         }
@@ -146,13 +126,12 @@ function analyzeSentiment(text) {
   
         // Display feedback in a popup
         showPopup(feedback, transcript);
-      }
+  }  
 
 
-      function closePopup() {
-        isRecordingAllowed = true; // Resume recording when the popup is closed
-        document.getElementById('popup').style.display = 'none';
-      }
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
 
 function tryAgain() {
   recordedChunks = [];
@@ -168,7 +147,6 @@ function exit() {
 }
 
 function showPopup(analysisResults, transcript) {
-  isRecordingAllowed = false; // Pause recording when the popup is displayed
   document.getElementById('transcript').innerText = transcript;
   document.getElementById('analysisResults').innerText = analysisResults;
   document.getElementById('popup').style.display = 'block';
@@ -194,6 +172,7 @@ function openTab(evt, tabName) {
 }
 
 function startWebcam() {
+  console.log("webcam turns on!");
   let constraints = { video: true, audio: true };
 
   navigator.mediaDevices.getUserMedia(constraints)
@@ -211,46 +190,38 @@ function startWebcam() {
 }
 
 function startRecording() {
-  if (!videoElement.srcObject) {
-    alert("Please start the webcam before recording.");
-    return;
-  }
-
   recordedChunks = [];
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
   stopRecordingBtn.disabled = false;
   isRecording = true;
   lastSpeechTime = Date.now();
+  
+  recognition.start();
 
   // Start the silence timer
   silenceTimer = setInterval(checkSilence, 5000); // Check every 5 seconds
 }
-
 
 function stopRecording() {
   clearInterval(silenceTimer);
 
   if (isRecording) {
     mediaRecorder.stop();
-    videoElement.srcObject.getTracks().forEach(track => track.stop()); // Stop the webcam stream
     startRecordingBtn.disabled = false;
     stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
   }
 }
-
-
 function checkSilence() {
   const currentTime = Date.now();
   const timeSinceLastSpeech = currentTime - lastSpeechTime;
 
-  // If 1 minute has passed since last speech input and recording is active, stop recording
+  // If 1 minute has passed since last speech input, stop recording
   if (isRecording && timeSinceLastSpeech >= 60000) {
     stopRecording();
   }
 }
-
 
 // Reset the last speech time whenever speech is detected
 recognition.onresult = function(event) {
@@ -264,6 +235,7 @@ recognition.onresult = function(event) {
     }
   }
 };
+
 
 function playRecording() {
   let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
