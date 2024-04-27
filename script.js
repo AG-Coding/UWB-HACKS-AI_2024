@@ -135,6 +135,7 @@ recognition.onresult = function(event) {
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
   recognition.stop();
+  stopWebcam();
   document.getElementById('popup').style.display = 'none';
 }
 
@@ -151,6 +152,7 @@ function exit() {
   openTab(Event.srcElement, 'Tab1');
   recognition.stop();
   stopRecording();
+  stopWebcam();
   closePopup();
 }
 
@@ -262,4 +264,12 @@ function playRecording() {
   videoPlayer.src = recordedUrl;
   videoPlayer.controls = true;
   videoElement.parentElement.appendChild(videoPlayer);
+}
+
+function stopWebcam() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stream.getTracks().forEach(track => {
+      track.stop();
+    });
+  }
 }
