@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <title>Your Web Application</title>
+  <!-- Include face-api.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+  <style>
+    /* Your CSS styles here */
+  </style>
 </head>
 <body>
   <div class="tab-container">
@@ -24,14 +29,13 @@
 
   <div id="Tab3" class="tabcontent">
     <div class="split">
-      <div id="video-container">
+      <div id="video-container" class="split-item">
         <video id="videoElement" autoplay></video>
-        <canvas id="overlayCanvas" width="640" height="480"></canvas>
         <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
         <button id="stopRecordingBtn" onclick="stopRecording()">Stop Recording</button>
         <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
       </div>
-      <div id="avatar-container">
+      <div id="avatar-container" class="split-item">
         <!-- Placeholder for 2D avatar -->
         <div id="avatar-2d">
           <!-- Placeholder image for 2D avatar -->
@@ -41,7 +45,85 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/@vladmandic/face-api"></script>
-  <script src="script.js"></script>
+  <script>
+    let mediaRecorder;
+    let recordedChunks = [];
+    let videoElement = document.getElementById("videoElement");
+    let startRecordingBtn = document.getElementById("startRecordingBtn");
+    let stopRecordingBtn = document.getElementById("stopRecordingBtn");
+    let playRecordingBtn = document.getElementById("playRecordingBtn");
+
+    // Wait for DOM content to be fully loaded
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Start facial detection
+      startWebcam();
+    });
+
+    function openTab(evt, tabName) {
+      let tabcontent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      let tablinks = document.getElementsByClassName("tablinks");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+      }
+
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.classList.add("active");
+
+      if (tabName === "Tab3") {
+        startWebcam();
+      }
+    }
+
+    function startWebcam() {
+      let constraints = { video: true, audio: true };
+
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(mediaStream) {
+          videoElement.srcObject = mediaStream;
+          mediaRecorder = new MediaRecorder(mediaStream);
+
+          mediaRecorder.ondataavailable = function(event) {
+            recordedChunks.push(event.data);
+          };
+
+          // Start facial detection
+          startFaceDetection();
+        })
+        .catch(function(err) {
+          console.log(err.name + ": " + err.message);
+        });
+    }
+
+    async function startFaceDetection() {
+      // Face detection code using face-api.js
+      // Add your code here
+    }
+
+    function startRecording() {
+      recordedChunks = [];
+      mediaRecorder.start();
+      startRecordingBtn.disabled = true;
+      stopRecordingBtn.disabled = false;
+    }
+
+    function stopRecording() {
+      mediaRecorder.stop();
+      startRecordingBtn.disabled = false;
+      stopRecordingBtn.disabled = true;
+    }
+
+    function playRecording() {
+      let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+      let recordedUrl = URL.createObjectURL(recordedBlob);
+      let videoPlayer = document.createElement("video");
+      videoPlayer.src = recordedUrl;
+      videoPlayer.controls = true;
+      videoElement.parentElement.appendChild(videoPlayer);
+    }
+  </script>
 </body>
 </html>
