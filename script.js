@@ -97,7 +97,7 @@ recognition.onresult = function(event) {
   // Calculate fluency score
   const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.3) - (pauseCount * 0.2);
 
-  const confidence = Math.min(100, Math.max(0, fluencyScore)) * (100 / 100); // Scale to a 0-100 range
+  const confidence = calculateConfidence(fluencyScore, vocabularyRichness);
   
         // Calculate vocabulary richness (example)
         const uniqueWords = new Set(words);
@@ -128,6 +128,12 @@ recognition.onresult = function(event) {
         showPopup(feedback, transcript);
   }  
 
+  function calculateConfidence(fluencyScore, vocabularyRichness) {
+    let confidence = (fluencyScore + vocabularyRichness) / 2;
+    confidence = Math.min(100, Math.max(0, confidence) * 10); // Ensure confidence is within 0 to 100 range
+    return confidence;
+  }
+  
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
@@ -141,9 +147,9 @@ function tryAgain() {
 }
 
 function exit() {
-  tryAgain()
+  tryAgain();
   openTab(Event.srcElement, 'Tab1');
-
+  closePopup();
 }
 
 function showPopup(analysisResults, transcript) {
