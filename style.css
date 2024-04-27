@@ -2,23 +2,23 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f0f0f0;
+  background-color: #F5F7FA;
 }
 
 .tab-container {
   overflow: hidden;
-  background-color: #333;
-  border-radius: 10px;
+  background-color: #ffffff;
+  border-radius: 0px;
   margin-bottom: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: right;
 }
 
 .tablinks {
-  background-color: #444;
+  background-color: #ffffff;
   border: none;
   outline: none;
-  color: #fff;
+  color: #000000;
   cursor: pointer;
   padding: 15px 25px;
   margin: 0 10px;
@@ -28,16 +28,16 @@ body {
 }
 
 .tablinks:hover {
-  background-color: #555;
+  background-color: #ffffff;
 }
 
 .tabcontent {
   display: none;
-  padding: 30px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  border: 0px solid #ffffff;
+  background-color: #F5F7FA;
+  border-radius: 0px;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
 }
 
 .active {
