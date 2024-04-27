@@ -11,7 +11,7 @@ let model;
 async function loadModel() {
     try {
         // Load the emotion detection model
-        const emotionModel = await tf.loadGraphModel('Emotion-model.json');
+        const emotionModel = await tf.loadGraphModel('Emotion.json');
         console.log('Model loaded successfully!');
         return emotionModel;
     } catch (error) {
