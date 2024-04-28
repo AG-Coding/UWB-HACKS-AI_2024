@@ -34,7 +34,6 @@ function analyzeSpeech(transcript) {
   const wordCount = words.length;
   const totalCharacters = transcript.replace(/\s/g, '').length;
   const averageWordLength = totalCharacters / wordCount;
-  totalSpeechDurationInSeconds += transcript.split(' ').length / 60;
 
   let tone = "Neutral";
   const informalWords = [
@@ -53,7 +52,12 @@ function analyzeSpeech(transcript) {
 
   const fillerWordCount = words.filter(word => fillerWords.includes(word.toLowerCase())).length;
 
-  const speechRate = (wordCount / totalSpeechDurationInSeconds) * 60;
+  const pauseThreshold = 1; // Longer than 1 second is considered significant
+  const pauses = transcript.match(/(\s|^)\.{2,}(\s|$)/g); // Find significant pauses
+  const pauseCount = pauses ? pauses.length : 0;
+
+  const speechDurationInSeconds = transcript.split(' ').length / 60;
+  const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
   const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3);
 
