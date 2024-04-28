@@ -12,27 +12,23 @@ let silenceTimer;
 let recordingStartTime;
 let recordingEndTime;
 
+
+const expectedTranscriptLength = 100;
+
 let recognition = new webkitSpeechRecognition();
 recognition.continuous = true;
 recognition.interimResults = true;
 
-
-const expectedTranscriptLength = 100;
-
-// let recognition = new webkitSpeechRecognition();
-// recognition.continuous = true;
-// recognition.interimResults = true;
-
-// recognition.onresult = function(event) {
-//   let interimTranscript = '';
-//   for (let i = event.resultIndex; i < event.results.length; ++i) {
-//     if (event.results[i].isFinal) {
-//       analyzeSpeech(event.results[i][0].transcript);
-//     } else {
-//       interimTranscript += event.results[i][0].transcript;
-//     }
-//   }
-// };
+recognition.onresult = function(event) {
+  let interimTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      analyzeSpeech(event.results[i][0].transcript);
+    } else {
+      interimTranscript += event.results[i][0].transcript;
+    }
+  }
+};
 
 function analyzeSpeech(transcript) {
   stopRecording();
@@ -218,8 +214,8 @@ function startRecording() {
   startRecordingBtn.disabled = true;
   stopRecordingBtn.disabled = false;
   isRecording = true;
-  // lastSpeechTime = Date.now(); // Remove this line
-  // recognition.start(); // Remove this line
+  lastSpeechTime = Date.now(); // Update last speech time
+  recognition.start(); // Start speech recognition
 
   console.log("Recording started");
 }
