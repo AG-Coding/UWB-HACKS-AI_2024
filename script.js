@@ -98,21 +98,22 @@ function analyzeSpeech(transcript) {
   const pauses = transcript.match(/(\s|^)\.{2,}(\s|$)/g); // Find significant pauses
   const pauseCount = pauses ? pauses.length : 0;
 
+  const uniqueWords = new Set(words);
+  const vocabularyRichness = (uniqueWords.size / wordCount) * 100;
+
   const speechDurationInSeconds = (recordingEndTime - recordingStartTime) / 1000;
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
-  const fluencyScore = ((speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3)) * 10;
+  const fluencyScore = ((speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3));
 
   const normalizedVocabularyRichness = (vocabularyRichness / 100) * 100;
-  const normalizedFluencyScore = (fluencyScore / 100) * 100;
-  const vocabularyRichnessWeight = 0.6; // Adjust according to importance
-  const fluencyScoreWeight = 0.4; // Adjust according to importance
+  const normalizedFluencyScore = (fluencyScore / 200) * 100;
+  const vocabularyRichnessWeight = 0.1;
+  const fluencyScoreWeight = 0.9; 
   const weightedVocabularyRichness = normalizedVocabularyRichness * vocabularyRichnessWeight;
   const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
   const confidence = Math.min(100, Math.max(0, weightedVocabularyRichness + weightedFluencyScore));
 
-  const uniqueWords = new Set(words);
-  const vocabularyRichness = (uniqueWords.size / wordCount) * 100;
 
   let feedback = `Speech analysis:\n`;
   feedback += `Word count: ${wordCount}\n`;
@@ -123,10 +124,10 @@ function analyzeSpeech(transcript) {
   feedback += `Confidence: ${confidence.toFixed(2)}%\n`;
   feedback += `Vocabulary richness: ${vocabularyRichness.toFixed(2)}%\n`;
 
-  if (confidence < 50) {
+  if (confidence < 78) {
     feedback += `Your speech confidence seems low. Try to speak more confidently and clearly.\n`;
   }
-  if (vocabularyRichness < 20) {
+  if (vocabularyRichness < 55) {
     feedback += `Expand your vocabulary to make your speech more engaging and varied.\n`;
   }
 
