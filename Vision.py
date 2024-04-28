@@ -93,6 +93,7 @@ def process_url():
         if 'url' in data:
             url = data['url']
             detected_faces = detect_faces(url)
+            print(detected_faces)
             return jsonify({"face": detected_faces}), 200
         else:
             return jsonify({"error": "URL not found in request data."}), 400
