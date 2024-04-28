@@ -106,13 +106,33 @@ function analyzeSpeech(transcript) {
 
   const fluencyScore = ((speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3));
 
-  const normalizedVocabularyRichness = (vocabularyRichness / 100) * 100;
-  const normalizedFluencyScore = (fluencyScore / 200) * 100;
-  const vocabularyRichnessWeight = 0.1;
-  const fluencyScoreWeight = 0.9; 
-  const weightedVocabularyRichness = normalizedVocabularyRichness * vocabularyRichnessWeight;
-  const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
-  const confidence = Math.min(100, Math.max(0, weightedVocabularyRichness + weightedFluencyScore));
+  const vocabularyRichnessWeight = 0.5;
+const fluencyScoreWeight = 0.5; 
+
+// Normalize the scores
+const normalizedVocabularyRichness = (vocabularyRichness / 100) * 100;
+const normalizedFluencyScore = (fluencyScore / 200) * 100;
+
+// Weighted scores
+const weightedVocabularyRichness = normalizedVocabularyRichness * vocabularyRichnessWeight;
+const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
+
+// Calculate confidence
+let confidence = (weightedVocabularyRichness + weightedFluencyScore) / (vocabularyRichnessWeight + fluencyScoreWeight);
+
+// Adjust confidence within a reasonable range
+confidence = Math.min(100, Math.max(0, confidence));
+
+// Optionally, you can introduce more variability by considering different thresholds
+if (confidence < 70) {
+    confidence -= 10;
+} else if (confidence > 90) {
+    confidence += 5;
+}
+
+  if (fluencyScore > 65) {
+    confidence += 20;
+  }
 
 
   let feedback = `Speech analysis:\n`;
