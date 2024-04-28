@@ -151,10 +151,11 @@ function tryAgain() {
 
 function exit() {
   closePopup();
-  openTab({currentTarget: document.getElementById('Tab1')}, 'Tab1');
+  openTab({ currentTarget: document.getElementById('Tab1') }, 'Tab1');
   recognition.stop();
   stopRecording();
   stopWebcam();
+  closePopup();
 }
 
 function showPopup(analysisResults, transcript) {
@@ -214,8 +215,8 @@ function startRecording() {
   
   recognition.start();
 
-  // // Start the silence timer
-  // silenceTimer = setInterval(checkSilence, 5000); // Check every 5 seconds
+  // Start the silence timer
+  silenceTimer = setInterval(checkSilence, 60000); // Check every 5 seconds
 }
 
 function stopRecording() {
@@ -226,6 +227,16 @@ function stopRecording() {
     startRecordingBtn.disabled = false;
     stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
+  }
+}
+
+function checkSilence() {
+  const now = Date.now();
+  const silenceThreshold = 60000; // 5 seconds
+
+  if (now - lastSpeechTime > silenceThreshold) {
+    // If there has been silence for more than the threshold, stop recording
+    stopRecording();
   }
 }
 
