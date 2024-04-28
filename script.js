@@ -97,7 +97,7 @@ function analyzeSpeech(transcript) {
     'fulfilled', 'well-pleased', 'thankful', 'sunny', 'joyful', 'upbeat', 'joyous', 'cheerful',
     'merry', 'good-humored', 'spirited', 'jolly', 'high-spirited', 'bright', 'breezy', 'sparkling',
     'buoyant', 'sunny', 'optimistic', 'lighthearted', 'light-hearted', 'carefree', 'lively', 'vivacious',
-    'fun-loving', 'animated', 'gay', 'playful', 'sprightly', 'witty', 'humorous', 'amusing', 'jocular'];
+    'fun-loving', 'animated', 'gay', 'playful', 'sprightly', 'witty', 'humorous', 'amusing', 'jocular', 'chat'];
  
 
   const containsInformalWord = words.some(word => informalWords.includes(word.toLowerCase()));
@@ -122,14 +122,8 @@ function analyzeSpeech(transcript) {
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
   const fluencyScore = ((speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3));
+  const confidence = Math.min(100, Math.max(0, fluencyScore));
 
-  const normalizedVocabularyRichness = (vocabularyRichness / 100) * 100;
-  const normalizedFluencyScore = (fluencyScore / 200) * 100;
-  const vocabularyRichnessWeight = 0.1;
-  const fluencyScoreWeight = 0.9;
-  const weightedVocabularyRichness = normalizedVocabularyRichness * vocabularyRichnessWeight;
-  const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
-  const confidence = Math.min(100, Math.max(0, weightedVocabularyRichness + weightedFluencyScore));
 
   let arrayString = arrayOfEmotions.join(", ");
 
@@ -138,7 +132,7 @@ function analyzeSpeech(transcript) {
   feedback += `Average word length: ${averageWordLength.toFixed(2)}\n`;
   feedback += `Tone: ${tone}\n`;
   feedback += `Speech rate: ${speechRate.toFixed(2)} words per minute\n`;
-  feedback += `Fluency score: ${fluencyScore.toFixed(2)}\n`;
+  // feedback += `Fluency score: ${fluencyScore.toFixed(2)}\n`;
   feedback += `Confidence: ${confidence.toFixed(2)}%\n`;
   feedback += `Vocabulary richness: ${vocabularyRichness.toFixed(2)}%\n`;
   feedback += `Most common emotion: ${getMostCommonEmotion(arrayOfEmotions)}\n`;
