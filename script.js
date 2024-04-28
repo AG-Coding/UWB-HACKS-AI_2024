@@ -11,7 +11,7 @@ let arrayOfEmotions = [];
 const mode = a =>
   Object.values(
     a.reduce((count, e) => {
-      if (!(e in count)) {
+      if (!(e in countx)) {
         count[e] = [0, e];
       }
 
@@ -28,6 +28,7 @@ let silenceTimer;
 let recordingStartTime;
 let recordingEndTime;
 let mediaSteam;
+
 
 const expectedTranscriptLength = 100;
 
@@ -96,8 +97,8 @@ function analyzeSpeech(transcript) {
     'fulfilled', 'well-pleased', 'thankful', 'sunny', 'joyful', 'upbeat', 'joyous', 'cheerful',
     'merry', 'good-humored', 'spirited', 'jolly', 'high-spirited', 'bright', 'breezy', 'sparkling',
     'buoyant', 'sunny', 'optimistic', 'lighthearted', 'light-hearted', 'carefree', 'lively', 'vivacious',
-    'fun-loving', 'animated', 'gay', 'playful', 'sprightly', 'witty', 'humorous', 'amusing', 'jocular',
-    'joking', 'jesting'];
+    'fun-loving', 'animated', 'gay', 'playful', 'sprightly', 'witty', 'humorous', 'amusing', 'jocular'];
+ 
 
   const containsInformalWord = words.some(word => informalWords.includes(word.toLowerCase()));
   if (containsInformalWord) {
@@ -157,7 +158,9 @@ function analyzeSpeech(transcript) {
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
+  openTab({ currentTarget: document.getElementById('Tab3') }, 'Tab3');
   recognition.stop();
+  stopRecording();
   stopWebcam();
 }
 
@@ -199,14 +202,19 @@ function openTab(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.classList.add("active");
 
-  if (tabName === "Tab3") {
+  // Check if the home tab is selected
+  if (tabName === "Tab1") {
+    // Stop webcam and recording
+    stopWebcam();
+    stopRecording();
+  } else if (tabName === "Tab3") {
+    // Start webcam when switching to the recording tab
     startWebcam();
   } else {
-    stopWebcam(); // Stop the webcam stream if not on Tab3
-    stopRecording(); // Stop recording if not on Tab3
+    // Stop webcam when switching to other tabs
+    stopWebcam();
   }
 }
-
 
 function sendImageToBackend(url) {
   //const url = 'http://example.com';  // The URL you want to send
@@ -253,6 +261,7 @@ function sendImageToBackend(url) {
 
 //create mediaRecorder
 function startWebcam() {
+  console.log("Webcam turns on!");
   let constraints = { video: true, audio: true };
 
   navigator.mediaDevices.getUserMedia(constraints)
@@ -314,16 +323,15 @@ function startRecording() {
   recordingStartTime = Date.now(); // Record start time
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
-  stopRecordingBtn.disabled = false;
   isRecording = true;
   lastSpeechTime = Date.now();
   recognition.start();
 
   // Start the silence timer
   silenceTimer = setInterval(checkSilence, 1000); // Check every 60 seconds
-
   console.log("Recording started");
 }
+
 
 function stopRecording() {
   clearInterval(silenceTimer);
@@ -332,7 +340,6 @@ function stopRecording() {
   if (isRecording) {
     mediaRecorder.stop();
     startRecordingBtn.disabled = false;
-    stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
 
     console.log("Recording stopped");

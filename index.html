@@ -20,25 +20,18 @@
 <body>
   <div class="tab-container">
     <button id="defaultOpen" class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
-    <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
-    <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
+    <button class="tablinks" onclick="openTab(event, 'Tab3')">Analyze</button>
   </div>
 
   <div id="Tab1" class="tabcontent">
     <iframe src="downright intrepid hummingbird-html (1)/index.html"></iframe>
   </div>
-
-  <div id="Tab2" class="tabcontent">
-    <h3>Tab 2 Content</h3>
-    <p>This is the content of Tab 2.</p>
-  </div>
-
   <div id="Tab3" class="tabcontent">
     <div class="split">
       <div id="video-container" class="split-item">
         <video id="videoElement" autoplay></video>
         <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
-        <button id="stopRecordingBtn" onclick="stopRecording()">Stop Recording</button>
+        <button id="stopRecordingBtn" onclick="stopRecording()" class="invisible">Stop Recording</button>
         <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
       </div>
       <div id="avatar-container" class="split-item">
@@ -50,7 +43,6 @@
       </div>
     </div>
   </div>
-
   <!-- Popup container -->
   <div id="popup" class="popup-container">
     <div class="popup-content">
@@ -62,6 +54,7 @@
       <button onclick="exit()">Exit</button>
     </div>
   </div>
+
   <script src="script.js"></script>
   <script>
     // Function to automatically click the defaultOpen button
