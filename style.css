@@ -1,3 +1,5 @@
+/* Updated CSS */
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -6,42 +8,25 @@ body {
 }
 
 .tab-container {
-  overflow: hidden;
-  background-color: #ffffff;
-  border-radius: 0px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: right;
+  background-color: #333; /* Darker background */
+  display: flex; /* Display buttons horizontally */
+  justify-content: space-around; /* Evenly space the buttons */
+  align-items: center; /* Center the text vertically */
 }
 
 .tablinks {
-  background-color: #ffffff;
-  border: none;
-  outline: none;
-  color: #000000;
+  color: #fff; /* White text color */
+  background-color: transparent; /* Remove background color */
+  border: none; /* Remove border */
   cursor: pointer;
-  padding: 15px 25px;
-  margin: 0 10px;
-  transition: background-color 0.3s;
   font-size: 18px;
+  padding: 15px 25px;
   border-radius: 10px;
+  transition: background-color 0.3s;
 }
 
 .tablinks:hover {
-  background-color: #ffffff;
-}
-
-.tabcontent {
-  display: none;
-  padding: 0px;
-  border: 0px solid #ffffff;
-  background-color: #F5F7FA;
-  border-radius: 0px;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
-}
-
-.active {
-  display: block;
+  background-color: rgba(255, 255, 255, 0.1); /* Add hover effect */
 }
 
 .split {
@@ -58,7 +43,38 @@ body {
 }
 
 #video-container {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#button-container {
+  display: flex;
+  flex-direction: row; /* Align buttons horizontally */
+  justify-content: center; /* Center buttons horizontally */
+  margin-top: 20px; /* Add margin between video and buttons */
+}
+
+#button-container button {
+  margin: 0 10px; /* Add space around buttons */
+  padding: 10px 20px; /* Add padding to buttons */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Set font family */
+  font-size: 16px; /* Set font size */
+  color: #fff; /* Text color */
+  background-color: #333; /* Match the color of the top bar */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#button-container button:hover {
+  background-color: #555; /* Darken the color on hover */
+}
+
+#button-container button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
 }
 
 #avatar-2d img {
@@ -71,33 +87,6 @@ body {
 
 #avatar-2d img:hover {
   transform: scale(1.1);
-}
-
-#videoElement {
-  width: 100%;
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  margin-top: 10px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-button:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
 }
 
 /* Popup styles */

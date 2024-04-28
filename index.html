@@ -16,21 +16,28 @@
   </style>
 </head>
 <body>
+  <!-- Top bar with dark theme -->
   <div class="tab-container">
     <button id="defaultOpen" class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
     <button class="tablinks" onclick="openTab(event, 'Tab3')">Analyze</button>
   </div>
 
+  <!-- Tab 1 content -->
   <div id="Tab1" class="tabcontent">
     <iframe src="downright intrepid hummingbird-html (1)/index.html"></iframe>
   </div>
+
+  <!-- Tab 3 content -->
   <div id="Tab3" class="tabcontent">
     <div class="split">
       <div id="video-container" class="split-item">
         <video id="videoElement" autoplay></video>
-        <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
-        <button id="stopRecordingBtn" onclick="stopRecording()" class="invisible">Stop Recording</button>
-        <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
+        <!-- Customize button colors -->
+        <div id="button-container">
+          <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
+          <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
+          <button id="stopRecordingBtn" onclick="stopRecording()" class="invisible">Stop Recording</button>
+        </div>
       </div>
       <div id="avatar-container" class="split-item">
         <!-- Placeholder for 2D avatar -->
@@ -41,6 +48,7 @@
       </div>
     </div>
   </div>
+
   <!-- Popup container -->
   <div id="popup" class="popup-container">
     <div class="popup-content">
