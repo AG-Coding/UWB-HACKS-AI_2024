@@ -212,15 +212,35 @@ function startRecording() {
   recordingStartTime = Date.now(); // Record start time
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
-  stopRecordingBtn.disabled = false;
   isRecording = true;
   lastSpeechTime = Date.now();
   recognition.start();
 
   // Start the silence timer
-  silenceTimer = setInterval(checkSilence, 1000); // Check every 60 seconds
+  silenceTimer = setInterval(checkSilence, 1000); // Check every second for silence
+}
 
-  console.log("Recording started");
+recognition.onresult = function(event) {
+  lastSpeechTime = Date.now(); // Update last speech time
+  let interimTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      analyzeSpeech(event.results[i][0].transcript);
+    } else {
+      interimTranscript += event.results[i][0].transcript;
+    }
+  }
+};
+
+function checkSilence() {
+  console.log("Checking silence...");
+  const now = Date.now();
+  const silenceThreshold = 60000; // 60 seconds
+
+  if (now - lastSpeechTime > silenceThreshold) {
+    // If there has been silence for more than the threshold, stop recording
+    stopRecording();
+  }
 }
 
 function stopRecording() {
@@ -230,7 +250,6 @@ function stopRecording() {
   if (isRecording) {
     mediaRecorder.stop();
     startRecordingBtn.disabled = false;
-    stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
 
     console.log("Recording stopped");

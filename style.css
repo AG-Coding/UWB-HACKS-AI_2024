@@ -137,3 +137,7 @@ button:disabled {
   border-radius: 10px;
   z-index: 9999;
 }
+
+.invisible {
+  display: none;
+}

@@ -18,7 +18,7 @@
 <body>
   <div class="tab-container">
     <button id="defaultOpen" class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
-    <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
+    <button class="tablinks" onclick="openTab(event, 'Tab3')">Analyze</button>
   </div>
 
   <div id="Tab1" class="tabcontent">
@@ -29,7 +29,7 @@
       <div id="video-container" class="split-item">
         <video id="videoElement" autoplay></video>
         <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
-        <button id="stopRecordingBtn" onclick="stopRecordingManually()">Stop Recording</button>
+        <button id="stopRecordingBtn" onclick="stopRecording()" class="invisible">Stop Recording</button>
         <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
       </div>
       <div id="avatar-container" class="split-item">
