@@ -12,18 +12,14 @@ let silenceTimer;
 let recordingStartTime;
 let recordingEndTime;
 
-let stopRecordingManuallyFlag = false; // Flag to indicate if recording should stop manually
 
-let recognition;
+const expectedTranscriptLength = 100;
 
-window.onload = function() {
-  recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-}
+let recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
 
 recognition.onresult = function(event) {
-  lastSpeechTime = Date.now(); // Update last speech time
   let interimTranscript = '';
   for (let i = event.resultIndex; i < event.results.length; ++i) {
     if (event.results[i].isFinal) {
@@ -32,27 +28,7 @@ recognition.onresult = function(event) {
       interimTranscript += event.results[i][0].transcript;
     }
   }
-
-  // If there's an interim transcript, show it in the popup
-  if (interimTranscript.trim() !== '') {
-    showPopup("Speech in progress...", interimTranscript);
-  }
 };
-
-
-recognition.onend = function() {
-  if (!stopRecordingManuallyFlag) {
-    stopRecording(); // Stop recording only if not stopped manually
-  }
-};
-
-// Rename the function to avoid conflicts with the variable name
-function stopRecordingManually() {
-  stopRecordingManuallyFlag = true; // Set flag to stop recording manually
-  stopRecording(); // Stop recording manually
-}
-
-const expectedTranscriptLength = 100;
 
 function analyzeSpeech(transcript) {
   stopRecording();
@@ -179,7 +155,7 @@ function tryAgain() {
 
 function exit() {
   closePopup();
-  openTab({ currentTarget: document.getElementById('defaultOpen') }, 'Tab1');
+  openTab({ currentTarget: document.getElementById('Tab1') }, 'Tab1');
   recognition.stop();
   stopRecording();
   stopWebcam();
@@ -191,23 +167,18 @@ function showPopup(analysisResults, transcript) {
   document.getElementById('popup').style.display = 'block';
 }
 
-// Initialize the tab content elements and add error handling
 function openTab(evt, tabName) {
   let tabcontent = document.getElementsByClassName("tabcontent");
-  if (tabcontent.length === 0) return; // Check if tab content exists
   for (let i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
   }
 
   let tablinks = document.getElementsByClassName("tablinks");
-  if (tablinks.length === 0) return; // Check if tab links exist
   for (let i = 0; i < tablinks.length; i++) {
     tablinks[i].classList.remove("active");
   }
 
-  let selectedTab = document.getElementById(tabName);
-  if (!selectedTab) return; // Check if selected tab exists
-  selectedTab.style.display = "block";
+  document.getElementById(tabName).style.display = "block";
   evt.currentTarget.classList.add("active");
 
   if (tabName === "Tab3") {
@@ -243,39 +214,52 @@ function startRecording() {
   startRecordingBtn.disabled = true;
   stopRecordingBtn.disabled = false;
   isRecording = true;
-  lastSpeechTime = Date.now(); // Update last speech time
-  recognition.start(); // Start speech recognition
+  lastSpeechTime = Date.now();
+  recognition.start();
+
+  // Start the silence timer
+  silenceTimer = setInterval(checkSilence, 1000); // Check every 60 seconds
 
   console.log("Recording started");
 }
 
 function stopRecording() {
+  clearInterval(silenceTimer);
+  recordingEndTime = Date.now(); // Record end time
 
-  // If recording manually stopped or no speech detected for more than 3 seconds
-  if (stopRecordingManuallyFlag) {
-    recordingEndTime = Date.now(); // Record end time
+  if (isRecording) {
+    mediaRecorder.stop();
+    startRecordingBtn.disabled = false;
+    stopRecordingBtn.disabled = true;
+    isRecording = false; // Reset recording flag
 
-    if (isRecording) {
-      mediaRecorder.stop();
-      startRecordingBtn.disabled = false;
-      stopRecordingBtn.disabled = true;
-      isRecording = false; // Reset recording flag
-
-      console.log("Recording stopped");
-    }
+    console.log("Recording stopped");
   }
 }
 
-// Event listener for the "Stop Recording" button
-stopRecordingBtn.addEventListener("click", function() {
-  stopRecordingManuallyFlag = true; // Set flag to stop recording manually
-  stopRecording(); // Stop recording manually
-});
+function checkSilence() {
+  console.log("Checking silence...");
+  const now = Date.now();
+  const silenceThreshold = 60000; // 60 seconds
 
-// Event listener for the "Start Recording" button to reset the flag
-startRecordingBtn.addEventListener("click", function() {
-  stopRecordingManuallyFlag = false; // Reset flag to allow automatic stopping
-});
+  if (now - lastSpeechTime > silenceThreshold) {
+    // If there has been silence for more than the threshold, stop recording
+    stopRecording();
+  }
+}
+
+// Reset the last speech time whenever speech is detected
+recognition.onresult = function(event) {
+  lastSpeechTime = Date.now(); // Update last speech time
+  let interimTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      analyzeSpeech(event.results[i][0].transcript);
+    } else {
+      interimTranscript += event.results[i][0].transcript;
+    }
+  }
+};
 
 function playRecording() {
   let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
