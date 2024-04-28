@@ -18,6 +18,7 @@
 <body>
   <div class="tab-container">
     <button id="defaultOpen" class="tablinks" onclick="openTab(event, 'Tab1')">Home</button>
+    <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
     <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
   </div>
 
@@ -29,7 +30,7 @@
       <div id="video-container" class="split-item">
         <video id="videoElement" autoplay></video>
         <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
-        <button id="stopRecordingBtn" onclick="stopRecording()">Stop Recording</button>
+        <button id="stopRecordingBtn" onclick="stopRecordingManually()">Stop Recording</button>
         <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
       </div>
       <div id="avatar-container" class="split-item">
@@ -53,6 +54,7 @@
       <button onclick="exit()">Exit</button>
     </div>
   </div>
+
   <script src="script.js"></script>
   <script>
     // Function to automatically click the defaultOpen button
