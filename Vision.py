@@ -13,13 +13,13 @@ def detect_faces(content):
 
     # with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/output.txt", "w") as file:
     #     file.write(str(binary_data))
-    with open('image.jpeg', 'wb') as f:
-        f.write(binary_data)
+    # with open('image.jpeg', 'wb') as f:
+    #     f.write(binary_data)
 
-    with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/image.jpeg", "rb") as image_file:
-        content = image_file.read()
+    # with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/image.jpeg", "rb") as image_file:
+    #     content = image_file.read()
 
-    image = vision.Image(content=content)
+    image = vision.Image(content=binary_data)
 
     response = client.face_detection(image=image)
     faces = response.face_annotations
