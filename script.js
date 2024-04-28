@@ -12,6 +12,7 @@ let silenceTimer;
 let recordingStartTime;
 let recordingEndTime;
 
+let stopButtonPressed = false; // Initialize the flag
 
 const expectedTranscriptLength = 100;
 
@@ -237,13 +238,17 @@ function stopRecording() {
   }
 }
 
+stopRecordingBtn.addEventListener("click", function() {
+  stopButtonPressed = true; // Set the flag when the button is pressed
+});
+
 function checkSilence() {
   console.log("Checking silence...");
   const now = Date.now();
   const silenceThreshold = 60000; // 60 seconds
 
   
-  while (Boolean(now - lastSpeechTime < silenceThreshold)) {
+  while (Boolean(now - lastSpeechTime < silenceThreshold) && !stopButtonPressed) {
     continue;
   }
   stopRecording();
