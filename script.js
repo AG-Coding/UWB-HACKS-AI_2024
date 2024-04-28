@@ -33,7 +33,13 @@ recognition.onresult = function(event) {
       interimTranscript += event.results[i][0].transcript;
     }
   }
+
+  // If there's an interim transcript, show it in the popup
+  if (interimTranscript.trim() !== '') {
+    showPopup("Speech in progress...", interimTranscript);
+  }
 };
+
 
 recognition.onend = function() {
   if (!stopRecordingManuallyFlag) {
