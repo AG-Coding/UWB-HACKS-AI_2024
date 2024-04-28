@@ -150,12 +150,12 @@ function tryAgain() {
 }
 
 function exit() {
-  tryAgain();
-  openTab(Event.srcElement, 'Tab1');
+  closePopup();
+  openTab(Event.srcElement, 'tab1');
   recognition.stop();
   stopRecording();
   stopWebcam();
-  closePopup();
+  openTab(Event.srcElement, 'tab1');
 }
 
 function showPopup(analysisResults, transcript) {
