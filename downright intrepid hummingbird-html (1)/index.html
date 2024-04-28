@@ -1,157 +1,195 @@
 <!DOCTYPE html>
-<html lang="en"
-  ><head
-    ><title>Downright Intrepid Hummingbird</title
-    ><meta property="og:title" content="Downright Intrepid Hummingbird" /><meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" /><meta
-      charset="utf-8" /><meta
-      property="twitter:card"
-      content="summary_large_image" /><style data-tag="reset-style-sheet">
-      html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6,figure,blockquote,figcaption {  margin: 0;  padding: 0;}button {  background-color: transparent;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type="button"],[type="reset"],[type="submit"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type="button"]:-moz-focus,[type="reset"]:-moz-focus,[type="submit"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}html { scroll-behavior: smooth  }</style
-    ><style data-tag="default-style-sheet">
-      html {
-        font-family: Inter;
-        font-size: 16px;
+<html lang="en">
+<head>
+  <title>VocalVista: Unlocking Human Communication</title>
+  <meta property="og:title" content="VocalVista: Unlocking Human Communication" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" />
+  <style>
+    /* Custom CSS */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f0f0f;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .home-container {
+      text-align: center;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .home-section {
+      margin: 20px;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      width: calc(50% - 40px);
+    }
+
+    .home-section.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .home-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-text::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #ffffff;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.5s ease;
+    }
+
+    .home-text:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .home-text-sub {
+      font-size: 20px;
+      color: #eeeeee;
+    }
+
+    .home-description {
+      font-size: 18px;
+      color: #cccccc;
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .home-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Neat 3D squares */
+    .square {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <div class="home-container">
+    <div class="home-section">
+      <div class="square"></div>
+      <span class="home-text">Unlocking the Potential of Human Communication</span><br>
+      <span class="home-text-sub">with VocalVista</span>
+      <div class="dropdown">
+        <img src="public/external/image211747-zusu-400h.png" alt="VocalVista Illustration" class="home-image">
+        <div class="dropdown-content">
+          <p class="home-description">VocalVista uses cutting-edge technology to analyze speech and personality traits, helping you unlock the full potential of your communication skills.</p>
+        </div>
+      </div>
+    </div>
+    <div class="home-section">
+      <div class="square"></div>
+      <span class="home-text">Story of VocalVista</span>
+      <div class="dropdown">
+        <div class="dropdown-content">
+          <p>The inspiration behind VocalVista stems from the desire to empower individuals to communicate more effectively and understand themselves better. By leveraging technology to analyze speech and provide personalized feedback, we aim to help people overcome communication barriers, enhance their self-awareness, and ultimately, enrich their lives.</p>
+        </div>
+      </div>
+    </div>
+    <div class="home-section">
+      <div class="square"></div>
+      <span class="home-text-sub">Discover Your Essence</span><br>
+      <span class="home-text">What We Do</span>
+      <div class="dropdown">
+        <div class="dropdown-content">
+          <p>VocalVision Insight employs advanced voice analysis algorithms to track subtle nuances in tone, pitch, and rhythm, providing a comprehensive understanding of emotional expression during speech.</p>
+        </div>
+        <img src="public/external/image224747-xko-200h.png" alt="Video Tracking" class="home-image">
+      </div>
+    </div>
+    <div class="home-section">
+      <div class="square"></div>
+      <span class="home-text-sub">Receive Detailed Insights</span><br>
+      <span class="home-text">Results</span>
+      <div class="dropdown">
+        <img src="public/external/vector1716-aqa9.svg" alt="Results" class="home-image">
+        <div class="dropdown-content">
+          <p>VocalVision Insight provides actionable feedback on your speech patterns, personality traits, and emotional expressions, empowering you to enhance your communication skills and deepen your self-awareness.</p>
+        </div>
+      </div>
+    </div>
+    <div class="home-section">
+      <div class="square"></div>
+      <span class="home-text">How It Works</span>
+      <div class="dropdown">
+        <div class="dropdown-content">
+          <p>VocalVista is a speech analysis tool that provides insights into various aspects of verbal communication and personality traits. It analyzes speech patterns, tone, and delivery to offer feedback on communication effectiveness.</p>
+        </div>
+      </div>
+    </div>
+    <div class="home-section">
+      <div class="square"></div>
+      <span class="home-text">About Us</span>
+      <div class="dropdown">
+        <div class="dropdown-content">
+          <p>At VocalVista, we're passionate about unlocking the potential of human communication. Our team of experts, including Tom Strzyz, Anish Gangu, and Aryan Khanna, combines cutting-edge technology with psychology to create a revolutionary tool that analyzes speech and personality traits. We believe that understanding how we speak and express ourselves is key to personal growth and effective communication. With VocalVista, embark on a journey of self-discovery and communication mastery.</p>
+        </p>
+        </div>
+        <img src="public/external/rectangle1571715-pel-200h.png" alt="About Me" class="home-image">
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const sections = document.querySelectorAll(".home-section");
+
+      function checkScroll() {
+        sections.forEach((section) => {
+          const sectionTop = section.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          if (sectionTop < windowHeight * 0.75) {
+            section.classList.add("active");
+          }
+        });
       }
 
-      body {
-        font-weight: 400;
-        font-style:normal;
-        text-decoration: none;
-        text-transform: none;
-        letter-spacing: normal;
-        line-height: 1.15;
-        color: var(--dl-color-gray-black);
-        background-color: var(--dl-color-gray-white);
-
-      }</style
-    ><link
-      rel="stylesheet"
-      href="https://unpkg.com/animate.css@4.1.1/animate.css" /><link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
-      data-tag="font" /><link
-      rel="stylesheet"
-      href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css" /></head
-  ><body
-    ><link rel="stylesheet" href="./style.css" /><div
-      ><link href="./index.css" rel="stylesheet" /><div class="home-container"
-        ><div class="home-desktop1"
-          ><div class="home-home"
-            ><div class="home-hero-section"
-              ><span class="home-text"
-                ><span class="home-text01">Analysis and insights </span
-                ><span>into your </span
-                ><span class="home-text03">presentation skills</span></span
-              ><div class="home-container1"></div
-              ><div class="home-illustration"
-                ><img
-                  src="public/external/image211747-zusu-400h.png"
-                  alt="image211747"
-                  class="home-image21" /></div></div
-            ><div class="home-community"
-              ><div class="home-community1"
-                ><span class="home-text04"
-                  >Unlock Your Voice, Discover Your Essence</span
-                ><span class="home-text05">What do we do?</span
-                ><div class="home-frame4"
-                  ><div class="home-membership-organizatios"
-                    ><div class="home-member"
-                      ><div class="home-icon"
-                        ><img
-                          src="public/external/rectangle1571712-dw4m-200h.png"
-                          alt="Rectangle1571712"
-                          class="home-rectangle157" /><img
-                          src="public/external/icon1712-191.svg"
-                          alt="Icon1712"
-                          class="home-icon1" /></div
-                      ><span class="home-text06"
-                        ><span> Emotions</span><br /><span
-                          >and Behaviour</span
-                        ></span
-                      ></div
-                    ><div class="home-frame3"
-                      ><span class="home-text10"
-                        >The VocalVision Insight employs advanced voice analysis
-                        algorithms to track subtle nuances in tone, pitch, and
-                        rhythm, providing a comprehensive understanding of
-                        emotional expression during speech.</span
-                      ></div
-                    ></div
-                  ><div class="home-national-associations"
-                    ><div class="home-member1"
-                      ><div class="home-icon2"
-                        ><img
-                          src="public/external/rectangle1571713-dss-200h.png"
-                          alt="Rectangle1571713"
-                          class="home-rectangle1571" /><div class="home-icon3"
-                          ><img
-                            src="public/external/image224747-xko-200h.png"
-                            alt="image224747"
-                            class="home-image22" /></div></div
-                      ><span class="home-text11">Video Tracking</span></div
-                    ><div class="home-container2"
-                      ><span class="home-text12"
-                        >Incorporating video recording capabilities, VocalVision
-                        Insight not only analyzes verbal expression but also
-                        visual cues such as facial expressions and body
-                        language, offering a holistic view of communication and
-                        emotional dynamics.</span
-                      ><div class="home-frame31"></div></div></div
-                  ><div class="home-national-associations1"
-                    ><div class="home-member2"
-                      ><div class="home-icon4"
-                        ><img
-                          src="public/external/rectangle1571715-pel-200h.png"
-                          alt="Rectangle1571715"
-                          class="home-rectangle1572" /><div class="home-icon5"
-                          ><div class="home-group2"
-                            ><img
-                              src="public/external/vector1716-6mlp.svg"
-                              alt="Vector1716"
-                              class="home-vector" /><img
-                              src="public/external/vector1716-stq.svg"
-                              alt="Vector1716"
-                              class="home-vector1" /><img
-                              src="public/external/vector1716-aqa9.svg"
-                              alt="Vector1716"
-                              class="home-vector2" /></div></div></div
-                      ><span class="home-text13">Results</span></div
-                    ><div class="home-frame32"
-                      ><span class="home-text14"
-                        >Receive detailed insights into your speech patterns,
-                        personality traits, and emotional expressions with
-                        VocalVision Insight. Our comprehensive results provide
-                        actionable feedback, empowering you to enhance your
-                        communication skills and deepen your
-                        self-awareness.</span
-                      ></div
-                    ></div
-                  ></div
-                ></div
-              ></div
-            ></div
-          ><div class="home-footer"
-            ><div class="home-footer-big4"></div></div></div
-        ><span class="home-text15">About Us</span
-        ><div class="text-container text-root-class-name"
-          ><span class="text-text"
-            ><span
-              >At VocalVista, We're passionate about unlocking the potential of
-              human communication. Our team of experts </span
-            ><span>combines</span
-            ><span>
-              cutting-edge technology with psychology to create a revolutionary
-              tool that analyzes speech and personality traits. We believe that
-              understanding how we speak and express ourselves is key to
-              personal growth and effective communication. With VocalVista,
-              embark on a journey of self-discovery and communication
-              mastery.</span
-            ></span
-          ></div
-        ></div
-      ></div
-    >
-  </body></html
->
+      window.addEventListener("scroll", checkScroll);
+      checkScroll();
+    });
+  </script>
+</body>
+</html>
