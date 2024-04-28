@@ -139,7 +139,9 @@ function analyzeSpeech(transcript) {
 
 function closePopup() {
   document.getElementById('popup').style.display = 'none';
+  openTab({ currentTarget: document.getElementById('Tab3') }, 'Tab3');
   recognition.stop();
+  stopRecording();
   stopWebcam();
 }
 
@@ -181,11 +183,17 @@ function openTab(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.classList.add("active");
 
-  if (tabName === "Tab3") {
+  // Check if the home tab is selected
+  if (tabName === "Tab1") {
+    // Stop webcam and recording
+    stopWebcam();
+    stopRecording();
+  } else if (tabName === "Tab3") {
+    // Start webcam when switching to the recording tab
     startWebcam();
   } else {
-    stopWebcam(); // Stop the webcam stream if not on Tab3
-    stopRecording(); // Stop recording if not on Tab3
+    // Stop webcam when switching to other tabs
+    stopWebcam();
   }
 }
 
