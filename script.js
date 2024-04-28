@@ -16,16 +16,6 @@ let stopRecordingManually = false; // Flag to indicate if recording should stop 
 
 let recognition;
 
-// Update recognition.onend to check if recording should stop automatically
-recognition.onend = function() {
-  if (!stopRecordingManually) {
-    stopRecording(); // Stop recording only if not stopped manually
-  }
-};
-
-
-const expectedTranscriptLength = 100;
-
 window.onload = function() {
   recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
@@ -42,6 +32,20 @@ window.onload = function() {
     }
   };
 };
+
+recognition.onend = function() {
+  if (!stopRecordingManually) {
+    stopRecording(); // Stop recording only if not stopped manually
+  }
+};
+
+function stopRecordingManually() {
+  stopRecordingManually = true;
+  stopRecording(); // Stop recording manually
+}
+
+const expectedTranscriptLength = 100;
+
 
 function analyzeSpeech(transcript) {
   stopRecording();
