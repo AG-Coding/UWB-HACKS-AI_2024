@@ -12,6 +12,15 @@ let silenceTimer;
 let recordingStartTime;
 let recordingEndTime;
 
+let stopRecordingManually = false; // Flag to indicate if recording should stop manually
+
+// Update recognition.onend to check if recording should stop automatically
+recognition.onend = function() {
+  if (!stopRecordingManually) {
+    stopRecording(); // Stop recording only if not stopped manually
+  }
+};
+
 
 const expectedTranscriptLength = 100;
 
@@ -232,6 +241,18 @@ function stopRecording() {
     console.log("Recording stopped");
   }
 }
+
+// Event listener for the "Stop Recording" button
+stopRecordingBtn.addEventListener("click", function() {
+  stopRecordingManually = true; // Set flag to stop recording manually
+  stopRecording(); // Stop recording manually
+});
+
+// Event listener for the "Start Recording" button to reset the flag
+startRecordingBtn.addEventListener("click", function() {
+  stopRecordingManually = false; // Reset flag to allow automatic stopping
+});
+
 
 // // Reset the last speech time whenever speech is detected
 // recognition.onresult = function(event) {
