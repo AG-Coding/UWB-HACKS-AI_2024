@@ -9,6 +9,10 @@ let isRecording = false;
 let lastSpeechTime = Date.now();
 let silenceTimer;
 
+let recordingStartTime;
+let recordingEndTime;
+
+
 const expectedTranscriptLength = 100;
 
 let recognition = new webkitSpeechRecognition();
@@ -56,7 +60,7 @@ function analyzeSpeech(transcript) {
   const pauses = transcript.match(/(\s|^)\.{2,}(\s|$)/g); // Find significant pauses
   const pauseCount = pauses ? pauses.length : 0;
 
-  const speechDurationInSeconds = 60;
+  const speechDurationInSeconds = (recordingEndTime - recordingStartTime) / 1000;
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
   const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3);
@@ -160,6 +164,7 @@ function startWebcam() {
 
 function startRecording() {
   recordedChunks = [];
+  recordingStartTime = Date.now(); // Record start time
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
   stopRecordingBtn.disabled = false;
@@ -175,6 +180,7 @@ function startRecording() {
 
 function stopRecording() {
   clearInterval(silenceTimer);
+  recordingEndTime = Date.now(); // Record end time
 
   if (isRecording) {
     mediaRecorder.stop();
