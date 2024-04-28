@@ -12,7 +12,6 @@ let silenceTimer;
 let recordingStartTime;
 let recordingEndTime;
 
-let stopButtonPressed = false; // Initialize the flag
 
 const expectedTranscriptLength = 100;
 
@@ -218,14 +217,10 @@ function startRecording() {
   lastSpeechTime = Date.now();
   recognition.start();
 
-  // Start the silence timer
-  silenceTimer = setInterval(checkSilence, 1000); // Check every 60 seconds
-
   console.log("Recording started");
 }
 
 function stopRecording() {
-  clearInterval(silenceTimer);
   recordingEndTime = Date.now(); // Record end time
 
   if (isRecording) {
@@ -238,51 +233,18 @@ function stopRecording() {
   }
 }
 
-stopRecordingBtn.addEventListener("click", function() {
-  stopButtonPressed = true; // Set the flag when the button is pressed
-});
-
-function checkSilence() {
-  console.log("Checking silence...");
-  const now = Date.now();
-  const silenceThreshold = 60000; // 60 seconds
-
-  // Check if 5 minutes (300000 milliseconds) have elapsed since the recording started
-  if (now - recordingStartTime >= 300000 && !stopButtonPressed) {
-    console.log("Maximum recording duration reached. Stopping recording...");
-    stopRecording();
-    stopWebcam();
-    return; // Exit the function early
-  }
-
-  // Check if there has been silence for more than the threshold
-  if (now - lastSpeechTime >= silenceThreshold || stopButtonPressed) {
-    stopRecording();
-    stopWebcam();
-  } else {
-    // If the silence threshold hasn't been reached and the stop button wasn't pressed,
-    // schedule the next check after a delay
-    recordingTimer = setTimeout(checkSilence, 1000); // Check every second
-  }
-}
-
-// Function to clear the recording timer
-function clearRecordingTimer() {
-  clearTimeout(recordingTimer);
-}
-
-// Reset the last speech time whenever speech is detected
-recognition.onresult = function(event) {
-  lastSpeechTime = Date.now(); // Update last speech time
-  let interimTranscript = '';
-  for (let i = event.resultIndex; i < event.results.length; ++i) {
-    if (event.results[i].isFinal) {
-      analyzeSpeech(event.results[i][0].transcript);
-    } else {
-      interimTranscript += event.results[i][0].transcript;
-    }
-  }
-};
+// // Reset the last speech time whenever speech is detected
+// recognition.onresult = function(event) {
+//   lastSpeechTime = Date.now(); // Update last speech time
+//   let interimTranscript = '';
+//   for (let i = event.resultIndex; i < event.results.length; ++i) {
+//     if (event.results[i].isFinal) {
+//       analyzeSpeech(event.results[i][0].transcript);
+//     } else {
+//       interimTranscript += event.results[i][0].transcript;
+//     }
+//   }
+// };
 
 function playRecording() {
   let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
