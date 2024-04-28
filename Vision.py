@@ -13,13 +13,13 @@ def detect_faces(content):
 
     # with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/output.txt", "w") as file:
     #     file.write(str(binary_data))
-    # with open('image.jpeg', 'wb') as f:
-    #     f.write(binary_data)
+    with open('image.jpeg', 'wb') as f:
+        f.write(binary_data)
 
-    # with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/image.jpeg", "rb") as image_file:
-    #     content = image_file.read()
+    with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/image.jpeg", "rb") as image_file:
+        content = image_file.read()
 
-    image = vision.Image(content=binary_data)
+    image = vision.Image(content=content)
 
     response = client.face_detection(image=image)
     faces = response.face_annotations
@@ -93,7 +93,6 @@ def process_url():
         if 'url' in data:
             url = data['url']
             detected_faces = detect_faces(url)
-            print(detected_faces)
             return jsonify({"face": detected_faces}), 200
         else:
             return jsonify({"error": "URL not found in request data."}), 400

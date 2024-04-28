@@ -5,32 +5,35 @@ let startRecordingBtn = document.getElementById("startRecordingBtn");
 let stopRecordingBtn = document.getElementById("stopRecordingBtn");
 let playRecordingBtn = document.getElementById("playRecordingBtn");
 
+
+
 let isRecording = false;
+let lastSpeechTime = Date.now();
+let silenceTimer;
 
 let recordingStartTime;
 let recordingEndTime;
-
+let mediaSteam;
 
 const expectedTranscriptLength = 100;
 
 let recognition = new webkitSpeechRecognition();
-recognition.continuous = true; // Continuous speech recognition
-recognition.interimResults = true; // Get interim results
+recognition.continuous = true;
+recognition.interimResults = true;
 
 recognition.onresult = function (event) {
   let interimTranscript = '';
   for (let i = event.resultIndex; i < event.results.length; ++i) {
     if (event.results[i].isFinal) {
-      // If result is final, print to console
-      console.log('Final transcript: ' + event.results[i][0].transcript);
+      analyzeSpeech(event.results[i][0].transcript);
     } else {
-      // If result is interim, append to interim transcript
       interimTranscript += event.results[i][0].transcript;
     }
   }
 };
 
 function analyzeSpeech(transcript) {
+  stopRecording();
   stopWebcam();
   recognition.stop();
   const words = transcript.split(' ');
@@ -147,6 +150,7 @@ function tryAgain() {
   startRecordingBtn.disabled = false;
   stopRecordingBtn.disabled = true;
   closePopup();
+  lastSpeechTime = Date.now();
   startWebcam();
   startRecording();
 }
@@ -186,67 +190,108 @@ function openTab(evt, tabName) {
     stopRecording(); // Stop recording if not on Tab3
   }
 }
-//just visual, not recording
+
+
+function sendImageToBackend(url) {
+  //const url = 'http://example.com';  // The URL you want to send
+  const data = { url: url };
+
+  fetch('http://127.0.0.1:5000/process_url', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log("data");
+      // Log the response from the server
+      console.log(data);
+      return data;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+
+}
+
+//create mediaRecorder
 function startWebcam() {
-  console.log("Webcam turns on!");
   let constraints = { video: true, audio: true };
 
   navigator.mediaDevices.getUserMedia(constraints)
-    .then(function (mediaStream) {
-      videoElement.srcObject = mediaStream;
-      mediaRecorder = new MediaRecorder(mediaStream);
+    .then(function (stream) {
+      mediaSteam = stream;
+      videoElement.srcObject = mediaSteam;
+      mediaRecorder = new MediaRecorder(mediaSteam);
 
       mediaRecorder.ondataavailable = function (event) {
         recordedChunks.push(event.data);
-
       };
-
     })
     .catch(function (err) {
       console.log(err.name + ": " + err.message);
     });
+
+
+  // Request access to the camera
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function (asdfasdfasdfasf) {
+      // Get the video element
+      var video = document.createElement('video');
+      video.srcObject = mediaSteam;
+      video.play();
+
+      // Create an image element
+      var img = document.createElement('img');
+      document.body.appendChild(img);
+
+      // Function to capture frame as JPEG and display in the <img> tag
+      function captureFrame() {
+        var canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        var dataUrl = canvas.toDataURL('image/jpeg');
+
+        // Set the src attribute of the <img> tag to the data URL
+        //img.src = dataUrl;
+
+
+        const result = sendImageToBackend(dataUrl);
+        return result;
+
+      }
+
+      // Capture a frame every second
+      setInterval(captureFrame, 5000);
+    })
+    .catch(function (error) {
+      console.error('Error accessing camera:', error);
+    });
+
 }
-var refreshRate;
-//does .start()
+
 function startRecording() {
-  if (!mediaRecorder) {
-    console.error("Media recorder is not initialized.");
-    return;
-  }
   recordedChunks = [];
   recordingStartTime = Date.now(); // Record start time
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
   stopRecordingBtn.disabled = false;
   isRecording = true;
-  captureFrame()
-  //hopefully works
-  // Function to capture frame as JPEG and display in the <img> tag
-  function captureFrame() {
-    let video = document.getElementById("videoElement");
+  lastSpeechTime = Date.now();
+  recognition.start();
 
-    var canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    var dataUrl = canvas.toDataURL('image/jpeg');
-
-    // Set the src attribute of the <img> tag to the data URL
-    //img.src = dataUrl;
-
-    console.log("sending image to backend");
-    const result = sendImageToBackend(dataUrl);
-    console.log("result: from sendimage to backend", result);
-    return result;
-
-  }
-  refreshRate = setInterval(captureFrame, 5000);
+  // Start the silence timer
+  silenceTimer = setInterval(checkSilence, 1000); // Check every 60 seconds
 
   console.log("Recording started");
 }
 
 function stopRecording() {
+  clearInterval(silenceTimer);
   recordingEndTime = Date.now(); // Record end time
 
   if (isRecording) {
@@ -254,10 +299,34 @@ function stopRecording() {
     startRecordingBtn.disabled = false;
     stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
-    clearInterval(refreshRate);
+
     console.log("Recording stopped");
   }
 }
+
+function checkSilence() {
+  console.log("Checking silence...");
+  const now = Date.now();
+  const silenceThreshold = 60000; // 60 seconds
+
+  if (now - lastSpeechTime > silenceThreshold) {
+    // If there has been silence for more than the threshold, stop recording
+    stopRecording();
+  }
+}
+
+// Reset the last speech time whenever speech is detected
+recognition.onresult = function (event) {
+  lastSpeechTime = Date.now(); // Update last speech time
+  let interimTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      analyzeSpeech(event.results[i][0].transcript);
+    } else {
+      interimTranscript += event.results[i][0].transcript;
+    }
+  }
+};
 
 function playRecording() {
   let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
@@ -285,30 +354,3 @@ function stopWebcam() {
     videoElement.srcObject = null;
   }
 }
-
-
-
-function sendImageToBackend(url) {
-  //const url = 'http://example.com';  // The URL you want to send
-  const data = { url: url };
-
-  fetch('http://127.0.0.1:5000/process_url', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log("json:");
-      // Log the response from the server
-      console.log(data);
-      return data;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-
-}
-
