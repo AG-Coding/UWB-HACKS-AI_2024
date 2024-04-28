@@ -216,7 +216,7 @@ function startRecording() {
   recognition.start();
 
   // Start the silence timer
-  silenceTimer = setInterval(checkSilence, 60000); // Check every 5 seconds
+  silenceTimer = setInterval(checkSilence, 5000); // Check every 5 seconds
 }
 
 function stopRecording() {
@@ -231,8 +231,9 @@ function stopRecording() {
 }
 
 function checkSilence() {
+  console.log('qoek?')
   const now = Date.now();
-  const silenceThreshold = 60000; // 5 seconds
+  const silenceThreshold = 600000; // 5 seconds
 
   if (now - lastSpeechTime > silenceThreshold) {
     // If there has been silence for more than the threshold, stop recording
