@@ -20,18 +20,19 @@ window.onload = function() {
   recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
   recognition.interimResults = true;
+}
 
-  recognition.onresult = function(event) {
-    lastSpeechTime = Date.now(); // Update last speech time
-    let interimTranscript = '';
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        analyzeSpeech(event.results[i][0].transcript);
-      } else {
-        interimTranscript += event.results[i][0].transcript;
-      }
+// Reset the last speech time whenever speech is detected
+recognition.onresult = function(event) {
+  lastSpeechTime = Date.now(); // Update last speech time
+  let interimTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      analyzeSpeech(event.results[i][0].transcript);
+    } else {
+      interimTranscript += event.results[i][0].transcript;
     }
-  };
+  }
 };
 
 recognition.onend = function() {
@@ -244,15 +245,19 @@ function startRecording() {
 }
 
 function stopRecording() {
-  recordingEndTime = Date.now(); // Record end time
 
-  if (isRecording) {
-    mediaRecorder.stop();
-    startRecordingBtn.disabled = false;
-    stopRecordingBtn.disabled = true;
-    isRecording = false; // Reset recording flag
+  // If recording manually stopped or no speech detected for more than 3 seconds
+  if (stopRecordingManuallyFlag) {
+    recordingEndTime = Date.now(); // Record end time
 
-    console.log("Recording stopped");
+    if (isRecording) {
+      mediaRecorder.stop();
+      startRecordingBtn.disabled = false;
+      stopRecordingBtn.disabled = true;
+      isRecording = false; // Reset recording flag
+
+      console.log("Recording stopped");
+    }
   }
 }
 
@@ -266,7 +271,6 @@ stopRecordingBtn.addEventListener("click", function() {
 startRecordingBtn.addEventListener("click", function() {
   stopRecordingManuallyFlag = false; // Reset flag to allow automatic stopping
 });
-
 
 function playRecording() {
   let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
