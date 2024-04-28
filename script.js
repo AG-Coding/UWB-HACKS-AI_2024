@@ -151,11 +151,10 @@ function tryAgain() {
 
 function exit() {
   closePopup();
-  openTab(Event.srcElement, 'tab1');
+  openTab({currentTarget: document.getElementById('tab1')}, 'tab1');
   recognition.stop();
   stopRecording();
   stopWebcam();
-  openTab(Event.srcElement, 'tab1');
 }
 
 function showPopup(analysisResults, transcript) {
