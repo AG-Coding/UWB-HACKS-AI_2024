@@ -103,7 +103,13 @@ function analyzeSpeech(transcript) {
 
   const fluencyScore = ((speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3)) * 10;
 
-  const confidence = Math.min(100, Math.max(0, fluencyScore));
+  const normalizedVocabularyRichness = (vocabularyRichness / 100) * 100;
+  const normalizedFluencyScore = (fluencyScore / 100) * 100;
+  const vocabularyRichnessWeight = 0.6; // Adjust according to importance
+  const fluencyScoreWeight = 0.4; // Adjust according to importance
+  const weightedVocabularyRichness = normalizedVocabularyRichness * vocabularyRichnessWeight;
+  const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
+  const confidence = Math.min(100, Math.max(0, weightedVocabularyRichness + weightedFluencyScore));
 
   const uniqueWords = new Set(words);
   const vocabularyRichness = (uniqueWords.size / wordCount) * 100;
