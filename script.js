@@ -26,6 +26,27 @@ recognition.onresult = function(event) {
   }
 };
 
+let startTime = null;
+let endTime = null;
+
+recognition.onresult = function(event) {
+  lastSpeechTime = Date.now(); // Update last speech time
+  let interimTranscript = '';
+  for (let i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      const transcript = event.results[i][0].transcript;
+      analyzeSpeech(transcript);
+      if (startTime === null) {
+        startTime = event.results[i][0].startTime;
+      }
+      endTime = event.results[i][0].endTime;
+    } else {
+      interimTranscript += event.results[i][0].transcript;
+    }
+  }
+};
+
+
 function analyzeSpeech(transcript) {
   stopRecording();
   stopWebcam();
@@ -56,7 +77,7 @@ function analyzeSpeech(transcript) {
   const pauses = transcript.match(/(\s|^)\.{2,}(\s|$)/g); // Find significant pauses
   const pauseCount = pauses ? pauses.length : 0;
 
-  const speechDurationInSeconds = transcript.split(' ').length / 60;
+  const speechDurationInSeconds = (endTime - startTime) / 1000;
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
   const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3);
