@@ -41,9 +41,47 @@ function analyzeSpeech(transcript) {
 
   let tone = "Neutral";
   const informalWords = [
-    'hey', 'yeah', 'like', 'gonna', 'wanna', 'um', 'cuz', 'kinda', 'gotta', 'lemme',
-    // Abbreviated for brevity
-  ];
+    'hey', 'yeah', 'like', 'gonna', 'wanna', 'um', 'cuz', 'kinda', 'gotta', 'lemme', 
+    'ain\'t', 'y\'all', 'ya', 'dunno', 'gimme', 'howdy', 'yikes', 'dang', 'haha', 
+    'yup', 'noob', 'cool', 'awesome', 'totally', 'seriously', 'okay', 'alright', 
+    'yeah', 'yo', 'hmm', 'oops', 'oh', 'wow', 'whoa', 'dude', 'bro', 'chill', 
+    'kidding', 'ugh', 'eh', 'meh', 'bleh', 'whatever', 'darn', 'nah', 'mhm', 'ugh', 
+    'yay', 'welp', 'yeah', 'yikes', 'freakin', 'dang', 'damn', 'yep', 'nope', 'huh', 
+    'hmm', 'wow', 'whoa', 'meh', 'huh', 'oops', 'yeet', 'yadda yadda', 'kinda', 'sorta',
+    'wanna', 'gonna', 'gotta', 'shoulda', 'coulda', 'woulda', 'musta', 'mighta', 'oughta', 
+    'wounda', 'outta', 'hafta', 'betcha', 'ain\'t', 'mightn\'t', 'oughtn\'t', 'shan\'t', 
+    'won\'t', 'isn\'t', 'aren\'t', 'haven\'t', 'hasn\'t', 'doesn\'t', 'didn\'t', 'can\'t', 
+    'couldn\'t', 'shouldn\'t', 'wouldn\'t', 'mightn\'t', 'used to', 'lemme', 'gimme', 
+    'wanna', 'gonna', 'hafta', 'oughta', 'kinda', 'sorta', 'musta', 'oughta', 
+    'coulda', 'shoulda', 'woulda', 'mighta', 'ain\'t', 'let\'s', 'gotta', 'waddya', 
+    'outta', 'betcha', 'c\'mon', 'gosh', 'gee', 'darn', 'shoot', 'heck', 'dangit',
+    'fudge', 'frick', 'friggin', 'freakin', 'flip', 'crap', 'dang', 'dangit', 'crapola', 
+    'doggone', 'baloney', 'shucks', 'crap', 'crud', 'dang', 'darn', 'dagnabbit', 'drat', 
+    'gee', 'golly', 'gosh', 'heck', 'hooey', 'jeez', 'oh man', 'oh boy', 'rats', 'shoot',
+    'shucks', 'son of a gun', 'crap', 'dammit', 'damned', 'goddamn', 'hell', 'bloody hell', 
+    'damn it', 'goddammit', 'god damn it', 'jesus', 'jesus christ', 'for god\'s sake', 
+    'for christ\'s sake', 'good lord', 'oh my god', 'oh my gosh', 'oh dear', 'oh no', 
+    'oh dear me', 'dear me', 'oh fudge', 'oh heck', 'oh sugar', 'oh shoot', 'oh nuts', 
+    'oh man', 'oh boy', 'oh brother', 'oh sister', 'oh heavens', 'oh my word', 'oh la la',
+    'oh crikey', 'yikes', 'yowza', 'wow', 'wowza', 'whoa', 'whoops', 'whoopsie', 'whoops-a-daisy',
+    'whoopsy-daisy', 'whoopsie-doodle', 'oopsy', 'oopsy-daisy', 'oopsie-doodle', 'oops-a-daisy',
+    'oopsie-daisy', 'whoopsie-doo', 'shh', 'shhh', 'shush', 'shut up', 'quiet', 'hush', 
+    'be quiet', 'keep it down', 'zip it', 'can it', 'give it a rest', 'pipe down', 'enough', 
+    'hold your tongue', 'shut your mouth', 'button it', 'belt up', 'shut it', 'knock it off', 
+    'put a sock in it', 'cool it', 'chill out', 'calm down', 'take a chill pill', 'relax', 
+    'take it easy', 'unwind', 'decompress', 'let your hair down', 'chillax', 'chillaxin', 
+    'chillin', 'chillin\'', 'relaxin', 'relaxin\'', 'mellow out', 'kick back', 'chill out', 
+    'chilled out', 'relaxed', 'cool', 'chillaxed', 'mellow', 'easygoing', 'laid-back', 
+    'calm', 'calm and collected', 'unflappable', 'unexcitable', 'peaceful', 'tranquil', 
+    'serene', 'undisturbed', 'untroubled', 'unperturbed', 'at ease', 'composed', 
+    'together', 'placid', 'cool-headed', 'self-possessed', 'easy', 'level-headed', 
+    'even-tempered', 'happy-go-lucky', 'lazy', 'happy', 'satisfied', 'content', 
+    'satisfied', 'glad', 'pleased', 'pleasurable', 'grateful', 'enjoyable', 'gratified', 
+    'fulfilled', 'well-pleased', 'thankful', 'sunny', 'joyful', 'upbeat', 'joyous', 'cheerful', 
+    'merry', 'good-humored', 'spirited', 'jolly', 'high-spirited', 'bright', 'breezy', 'sparkling', 
+    'buoyant', 'sunny', 'optimistic', 'lighthearted', 'light-hearted', 'carefree', 'lively', 'vivacious', 
+    'fun-loving', 'animated', 'gay', 'playful', 'sprightly', 'witty', 'humorous', 'amusing', 'jocular', 
+    'joking', 'jesting'];
 
   const containsInformalWord = words.some(word => informalWords.includes(word.toLowerCase()));
   if (containsInformalWord) {
@@ -90,8 +128,9 @@ function analyzeSpeech(transcript) {
   console.log(feedback);
   console.log("Analyzing speech:", transcript);
 
-  showPopup(feedback, transcript);
+  showPopup(feedback, transcript); // Call showPopup with feedback
 }
+
 
 function calculateFinalConfidence(vocabularyRichness, fluencyScore) {
   // Normalize vocabulary richness and fluency score to a scale of 0 to 100
