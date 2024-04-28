@@ -242,10 +242,12 @@ function checkSilence() {
   const now = Date.now();
   const silenceThreshold = 60000; // 60 seconds
 
-  while (!now - lastSpeechTime < silenceThreshold) {
-    stopRecording();
-    stopWebcam();
+  
+  while (Boolean(now - lastSpeechTime < silenceThreshold)) {
+    continue;
   }
+  stopRecording();
+  stopWebcam();
 }
 
 // Reset the last speech time whenever speech is detected
