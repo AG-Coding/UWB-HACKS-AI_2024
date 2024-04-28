@@ -63,9 +63,10 @@ function analyzeSpeech(transcript) {
   const speechDurationInSeconds = (recordingEndTime - recordingStartTime) / 1000;
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
 
-  const fluencyScore = (speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3);
+  const maxFluencyScore = (maxSpeechRate * 0.5) - (minFillerWordCount * 0.2) - (minPauseCount * 0.3);
+  const fluencyScore = ((speechRate * 0.5) - (fillerWordCount * 0.2) - (pauseCount * 0.3)) / maxFluencyScore * 100;
 
-  const confidence = Math.min(100, Math.max(0, fluencyScore)) * 10;
+  const confidence = calculateFinalConfidence(vocabularyRichness, fluencyScore);
 
   const uniqueWords = new Set(words);
   const vocabularyRichness = (uniqueWords.size / wordCount) * 100;
@@ -90,6 +91,26 @@ function analyzeSpeech(transcript) {
   console.log("Analyzing speech:", transcript);
 
   showPopup(feedback, transcript);
+}
+
+function calculateFinalConfidence(vocabularyRichness, fluencyScore) {
+  // Normalize vocabulary richness and fluency score to a scale of 0 to 100
+  const normalizedVocabularyRichness = (vocabularyRichness / 100) * 100;
+  const normalizedFluencyScore = (fluencyScore / 100) * 100;
+
+  // Define weights for vocabulary richness and fluency score
+  const vocabularyRichnessWeight = 0.6; // Adjust according to importance
+  const fluencyScoreWeight = 0.4; // Adjust according to importance
+
+  // Calculate weighted scores
+  const weightedVocabularyRichness = normalizedVocabularyRichness * vocabularyRichnessWeight;
+  const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
+
+  // Combine the weighted scores to calculate the final confidence score
+  const finalConfidence = weightedVocabularyRichness + weightedFluencyScore;
+
+  // Ensure the final confidence score is within the range of 0 to 100
+  return Math.min(100, Math.max(0, finalConfidence));
 }
 
 function closePopup() {
