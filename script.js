@@ -22,7 +22,6 @@ window.onload = function() {
   recognition.interimResults = true;
 }
 
-// Reset the last speech time whenever speech is detected
 recognition.onresult = function(event) {
   lastSpeechTime = Date.now(); // Update last speech time
   let interimTranscript = '';
