@@ -247,12 +247,28 @@ function checkSilence() {
   const now = Date.now();
   const silenceThreshold = 60000; // 60 seconds
 
-  
-  while (Boolean(now - lastSpeechTime < silenceThreshold) && !stopButtonPressed) {
-    continue;
+  // Check if 5 minutes (300000 milliseconds) have elapsed since the recording started
+  if (now - recordingStartTime >= 300000 && !stopButtonPressed) {
+    console.log("Maximum recording duration reached. Stopping recording...");
+    stopRecording();
+    stopWebcam();
+    return; // Exit the function early
   }
-  stopRecording();
-  stopWebcam();
+
+  // Check if there has been silence for more than the threshold
+  if (now - lastSpeechTime >= silenceThreshold || stopButtonPressed) {
+    stopRecording();
+    stopWebcam();
+  } else {
+    // If the silence threshold hasn't been reached and the stop button wasn't pressed,
+    // schedule the next check after a delay
+    recordingTimer = setTimeout(checkSilence, 1000); // Check every second
+  }
+}
+
+// Function to clear the recording timer
+function clearRecordingTimer() {
+  clearTimeout(recordingTimer);
 }
 
 // Reset the last speech time whenever speech is detected
