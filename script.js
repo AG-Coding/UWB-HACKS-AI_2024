@@ -151,7 +151,7 @@ function tryAgain() {
 
 function exit() {
   closePopup();
-  openTab({currentTarget: document.getElementById('tab1')}, 'tab1');
+  openTab({currentTarget: document.getElementById('Tab1')}, 'Tab1');
   recognition.stop();
   stopRecording();
   stopWebcam();
