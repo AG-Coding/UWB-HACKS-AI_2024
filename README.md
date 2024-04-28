@@ -1,13 +1,13 @@
 # UWB-HACKS-AI_2024
-Hackaton, we cooking everyone fr
 
-
-https://docs.google.com/document/d/1bgmnJ2P4nx9tvPxvkRA_YikVeRXA073FLpWCPoEHZfw/edit?usp=sharing
+VocalVista
 
 modules that need to benistalled for this to run:
-1. google.cloud
-2. tensorflow
-3. nmp install afinn-165
-4. brew
-5. http-server -p 3000
-6. pip install vaderSentiment
+1. pip install vaderSentiment, google.cloud, flask, flask_cors.
+2. google.cloud, authenticated google account and local ADC, google cloud project has enabled API
+
+Running the project
+1. Python back-end running: (Vision.py)
+2. front end running: http-server -p 3000 (brew install http-server)
+
+Last step: open front end .html file.
