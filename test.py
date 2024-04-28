@@ -28,6 +28,7 @@ def detect_faces(path):
     print("Faces:")
 
     for face in faces:
+        print(f"detection confidence: {face.detection_confidence}")
         print(f"anger: {likelihood_name[face.anger_likelihood]}")
         print(f"joy: {likelihood_name[face.joy_likelihood]}")
         print(f"surprise: {likelihood_name[face.surprise_likelihood]}")
