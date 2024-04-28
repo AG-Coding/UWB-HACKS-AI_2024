@@ -52,9 +52,24 @@ function analyzeSpeech(transcript) {
 
   const fillerWordCount = words.filter(word => fillerWords.includes(word.toLowerCase())).length;
 
-  const pauseThreshold = 1; // Longer than 1 second is considered significant
-  const pauses = transcript.match(/(\s|^)\.{2,}(\s|$)/g); // Find significant pauses
-  const pauseCount = pauses ? pauses.length : 0;
+  const pauseThreshold = 2.5; // Longer than 1 second is considered significant
+  let pauseCount = 0;
+  let lastWordEndTime = 0;
+
+for (let i = 0; i < words.length; i++) {
+  const word = words[i];
+  const wordStartTime = i === 0 ? 0 : EventSource.results[i - 1][0].startTime;
+  const wordEndTime = EventSource.results[i][0].endTime;
+
+  if (i > 0) {
+    const timeElapsed = (wordStartTime - lastWordEndTime) / 1000; // Convert to seconds
+    if (timeElapsed >= pauseThreshold) {
+      pauseCount++;
+    }
+  }
+
+  lastWordEndTime = wordEndTime;
+}
 
   const speechDurationInSeconds = 60;
   const speechRate = (wordCount / speechDurationInSeconds) * 60;
