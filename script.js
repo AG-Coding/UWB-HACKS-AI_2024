@@ -223,7 +223,6 @@ function startRecording() {
   console.log("Recording started");
 }
 
-
 function stopRecording() {
   clearInterval(silenceTimer);
   recordingEndTime = Date.now(); // Record end time
@@ -233,9 +232,6 @@ function stopRecording() {
     startRecordingBtn.disabled = false;
     stopRecordingBtn.disabled = true;
     isRecording = false; // Reset recording flag
-
-    // Display results on the "Results" tab
-    showResults("Your analysis results go here", "Your transcript goes here");
 
     console.log("Recording stopped");
   }
@@ -291,26 +287,3 @@ function stopWebcam() {
     videoElement.srcObject = null;
   }
 }
-
-function showResults(analysisResults, transcript) {
-  document.getElementById('analysisResults').innerText = analysisResults;
-  document.getElementById('transcript').innerText = transcript;
-  openTab({ currentTarget: document.getElementById('Tab4') }, 'Tab4');
-}
-
-// recognition.onresult = function(event) {
-//   lastSpeechTime = Date.now(); // Update last speech time
-//   let interimTranscript = '';
-//   for (let i = event.resultIndex; i < event.results.length; ++i) {
-//     if (event.results[i].isFinal) {
-//       analyzeSpeech(event.results[i][0].transcript);
-//     } else {
-//       interimTranscript += event.results[i][0].transcript;
-//     }
-//   }
-
-//   // If there's an interim transcript, show it in the "Results" tab
-//   if (interimTranscript.trim() !== '') {
-//     showResults("Speech in progress...", interimTranscript);
-//   }
-// };
