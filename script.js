@@ -5,7 +5,21 @@ let startRecordingBtn = document.getElementById("startRecordingBtn");
 let stopRecordingBtn = document.getElementById("stopRecordingBtn");
 let playRecordingBtn = document.getElementById("playRecordingBtn");
 
+let string = "";
+let arrayOfEmotions = [];
 
+const mode = a =>
+  Object.values(
+    a.reduce((count, e) => {
+      if (!(e in count)) {
+        count[e] = [0, e];
+      }
+
+      count[e][0]++;
+      return count;
+    }, {})
+  ).reduce((a, v) => v[0] < a[0] ? a : v, [0, null])[1];
+;
 
 let isRecording = false;
 let lastSpeechTime = Date.now();
@@ -116,6 +130,7 @@ function analyzeSpeech(transcript) {
   const weightedFluencyScore = normalizedFluencyScore * fluencyScoreWeight;
   const confidence = Math.min(100, Math.max(0, weightedVocabularyRichness + weightedFluencyScore));
 
+  let arrayString = arrayOfEmotions.join(", ");
 
   let feedback = `Speech analysis:\n`;
   feedback += `Word count: ${wordCount}\n`;
@@ -125,6 +140,7 @@ function analyzeSpeech(transcript) {
   feedback += `Fluency score: ${fluencyScore.toFixed(2)}\n`;
   feedback += `Confidence: ${confidence.toFixed(2)}%\n`;
   feedback += `Vocabulary richness: ${vocabularyRichness.toFixed(2)}%\n`;
+  feedback += `Most common emotion: ${getMostCommonEmotion(arrayOfEmotions)}\n`;
 
   if (confidence < 78) {
     feedback += `Your speech confidence seems low. Try to speak more confidently and clearly.\n`;
@@ -208,6 +224,25 @@ function sendImageToBackend(url) {
       console.log("data");
       // Log the response from the server
       console.log(data);
+      let helper = data.face[0];
+      console.log(helper);
+      // if (helper.detection_confidence > 0.95) {
+      //   if (helper.anger === "VERY_LIKELY") {
+      //     arrayOfEmotions.push("anger");
+      //   }
+      //   if (helper.joy === "VERY_LIKELY") {
+      //     arrayOfEmotions.push("joy");
+      //   }
+      //   if (helper.surprise === "VERY_LIKELY") {
+      //     arrayOfEmotions.push("surprise");
+      //   }
+      //   if (helper.sorrow === "VERY_LIKELY") {
+      //     arrayOfEmotions.push("sorrow");
+      //   }
+      // }
+      string = JSON.stringify(data);
+      string = getEmotion(string);
+      arrayOfEmotions.push(string);
       return data;
     })
     .catch(error => {
@@ -266,7 +301,7 @@ function startWebcam() {
       }
 
       // Capture a frame every second
-      setInterval(captureFrame, 5000);
+      setInterval(captureFrame, 1000);
     })
     .catch(function (error) {
       console.error('Error accessing camera:', error);
@@ -353,4 +388,45 @@ function stopWebcam() {
     tracks.forEach(track => track.stop());
     videoElement.srcObject = null;
   }
+}
+
+function getEmotion(jsonStr) {
+  const data = JSON.parse(jsonStr);
+  const emotions = data.face[0];
+
+  let maxLikelihood = "VERY_UNLIKELY";
+  let maxLikelihoodEmotion = "neutral";
+
+  for (const emotion in emotions) {
+    const likelihood = emotions[emotion];
+    if (likelihood === "VERY_LIKELY") {
+      maxLikelihoodEmotion = emotion;
+      break;
+    } else if (likelihood === "LIKELY" && maxLikelihood !== "LIKELY") {
+      maxLikelihood = "LIKELY";
+      maxLikelihoodEmotion = emotion;
+    }
+  }
+
+  return maxLikelihoodEmotion;
+}
+
+function getMostCommonEmotion(emotions) {
+  // Count occurrences of each emotion
+  const emotionCounts = {};
+  emotions.forEach(emotion => {
+    emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+  });
+
+  // Find emotion with the maximum count
+  let maxCount = 0;
+  let mostCommonEmotion = "neutral";
+  for (const emotion in emotionCounts) {
+    if (emotionCounts[emotion] > maxCount) {
+      maxCount = emotionCounts[emotion];
+      mostCommonEmotion = emotion;
+    }
+  }
+
+  return mostCommonEmotion;
 }
