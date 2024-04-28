@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <style>
     iframe {
       display: block;
@@ -13,6 +14,39 @@
       margin: 0;
       padding: 0;
     }
+
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tablinks {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      padding: 15px 25px;
+      margin: 0 10px;
+      font-size: 18px;
+      border-radius: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .tablinks:hover {
+      background-color: #45a049;
+    }
+
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      background-color: #F5F7FA;
+      border-radius: 10px;
+      box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .active {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -21,26 +55,25 @@
     <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
   </div>
 
-  <div id="Tab1" class="tabcontent">
-    <iframe src="downright intrepid hummingbird-html (1)/index.html"></iframe>
-  </div>
-  <div id="Tab3" class="tabcontent">
-    <div class="split">
-      <div id="video-container" class="split-item">
-        <video id="videoElement" autoplay></video>
-        <button id="startRecordingBtn" onclick="startRecording()">Start Recording</button>
-        <button id="stopRecordingBtn" onclick="stopRecordingManually()">Stop Recording</button>
-        <button id="playRecordingBtn" onclick="playRecording()">Play Recording</button>
+  <div id="Tab1" class="tabcontent active">
+    <div class="container mx-auto py-10">
+      <h1 class="text-4xl font-bold text-center text-green-700 mb-8">Welcome to our Awesome Website!</h1>
+      <div class="flex justify-center items-center mb-8">
+        <img src="graphics/homepage-image.png" alt="Homepage Image" class="w-96 h-auto rounded-lg shadow-md">
       </div>
-      <div id="avatar-container" class="split-item">
-        <!-- Placeholder for 2D avatar -->
-        <div id="avatar-2d">
-          <!-- Placeholder image for 2D avatar -->
-          <img src="avatar.jpeg" alt="2D Avatar">
-        </div>
-      </div>
+      <p class="text-lg text-center text-gray-800">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget justo et lorem sodales sollicitudin vitae nec nulla. Sed volutpat leo sit amet nulla rutrum, eu consequat metus varius.</p>
     </div>
   </div>
+  <div id="Tab3" class="tabcontent">
+    <div class="container mx-auto py-10">
+      <h1 class="text-4xl font-bold text-center text-blue-700 mb-8">Tab 3 Content</h1>
+      <div class="flex justify-center items-center mb-8">
+        <img src="graphics/tab3-image.png" alt="Tab 3 Image" class="w-96 h-auto rounded-lg shadow-md">
+      </div>
+      <p class="text-lg text-center text-gray-800">This is the content of Tab 3. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget justo et lorem sodales sollicitudin vitae nec nulla. Sed volutpat leo sit amet nulla rutrum, eu consequat metus varius.</p>
+    </div>
+  </div>
+
   <!-- Popup container -->
   <div id="popup" class="popup-container">
     <div class="popup-content">
