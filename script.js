@@ -145,6 +145,8 @@ function tryAgain() {
   stopRecordingBtn.disabled = true;
   closePopup();
   lastSpeechTime = Date.now();
+  startWebcam();
+  startRecording();
 }
 
 function exit() {
@@ -204,8 +206,6 @@ function startWebcam() {
 }
 
 function startRecording() {
-  startRecording();
-  startWebcam();
   recordedChunks = [];
   mediaRecorder.start();
   startRecordingBtn.disabled = true;
