@@ -30,12 +30,6 @@ VocalVista is a speech analysis tool that provides insights into various aspects
   - Google Cloud for AI-powered services
   - HTTP server for frontend hosting
 
-## Challenges We Faced
-- Handling diverse accents and background noise during speech analysis.
-- Improving the accuracy of emotional and personality trait recognition.
-- Managing latency and data quality issues while attempting to include local visual analysis.
-- Balancing real-time performance with user privacy and security concerns.
-
 ## Accomplishments
 - Developed a robust speech analysis tool capable of real-time feedback.
 - Integrated advanced AI for sentiment analysis and emotion detection.
