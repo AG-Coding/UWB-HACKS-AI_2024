@@ -1,101 +1,127 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
+from google.cloud import vision
 import base64
-def detect_faces(content):
-    """Detects faces in an image."""
-    from google.cloud import vision
+import logging
+from typing import List, Dict, Union
+from pathlib import Path
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Constants
+TEMP_IMAGE_PATH = Path("image.jpeg")
+LIKELIHOOD_NAMES = (
+    "UNKNOWN",
+    "VERY_UNLIKELY",
+    "UNLIKELY",
+    "POSSIBLE",
+    "LIKELY",
+    "VERY_LIKELY",
+)
+
+def process_base64_image(content: str) -> bytes:
+    """
+    Process base64 encoded image content.
+    
+    Args:
+        content (str): Base64 encoded image string
+        
+    Returns:
+        bytes: Decoded binary image data
+    """
+    try:
+        base64_data = content.split(',')[1]
+        return base64.b64decode(base64_data)
+    except IndexError:
+        raise ValueError("Invalid base64 image format")
+    except Exception as e:
+        raise ValueError(f"Error processing base64 image: {str(e)}")
+
+def detect_faces(content: str) -> List[Dict[str, Union[float, str]]]:
+    """
+    Detects faces and their emotional attributes in an image using Google Cloud Vision API.
+    
+    Args:
+        content (str): Base64 encoded image string
+        
+    Returns:
+        List[Dict]: List of detected faces with their emotional attributes
+    """
     client = vision.ImageAnnotatorClient()
-    base64_data = content.split(',')[1]
+    
+    try:
+        # Process and save image temporarily
+        binary_data = process_base64_image(content)
+        TEMP_IMAGE_PATH.write_bytes(binary_data)
+        
+        # Read image and perform face detection
+        image_content = TEMP_IMAGE_PATH.read_bytes()
+        image = vision.Image(content=image_content)
+        response = client.face_detection(image=image)
+        
+        # Clean up temporary file
+        TEMP_IMAGE_PATH.unlink(missing_ok=True)
+        
+        faces = response.face_annotations
+        if not faces:
+            logger.info("No faces detected in the image")
+            return []
+            
+        # Extract face information
+        return [
+            {
+                "detection_confidence": face.detection_confidence,
+                "anger": LIKELIHOOD_NAMES[face.anger_likelihood],
+                "joy": LIKELIHOOD_NAMES[face.joy_likelihood],
+                "surprise": LIKELIHOOD_NAMES[face.surprise_likelihood],
+                "sorrow": LIKELIHOOD_NAMES[face.sorrow_likelihood]
+            }
+            for face in faces
+        ]
+        
+    except Exception as e:
+        logger.error(f"Error in face detection: {str(e)}")
+        raise
 
-    # Decode the Base64 string into bytes
-    binary_data = base64.b64decode(base64_data)
-
-    # with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/output.txt", "w") as file:
-    #     file.write(str(binary_data))
-    with open('image.jpeg', 'wb') as f:
-        f.write(binary_data)
-
-    with open("/Users/james/Desktop/code/github/UWB-HACKS-AI_2024/image.jpeg", "rb") as image_file:
-        content = image_file.read()
-
-    image = vision.Image(content=content)
-
-    response = client.face_detection(image=image)
-    faces = response.face_annotations
-
-    if not faces:
-        print("No faces detected in the image.")
-        return []
-
-    # Names of likelihood from google.cloud.vision.enums
-    likelihood_name = (
-        "UNKNOWN",
-        "VERY_UNLIKELY",
-        "UNLIKELY",
-        "POSSIBLE",
-        "LIKELY",
-        "VERY_LIKELY",
-    )
-    #print("Faces:")
-
-    face_info = []
-    for face in faces:
-        detection_confidence = face.detection_confidence
-        anger = likelihood_name[face.anger_likelihood]
-        joy = likelihood_name[face.joy_likelihood]
-        surprise = likelihood_name[face.surprise_likelihood]
-        sorrow = likelihood_name[face.sorrow_likelihood]
-        face_info.append({
-            "detection_confidence": detection_confidence,
-            "anger": anger,
-            "joy": joy,
-            "surprise": surprise,
-            "sorrow": sorrow
-        })
-    return face_info
-        # vertices = [
-        #     f"({vertex.x},{vertex.y})" for vertex in face.bounding_poly.vertices
-        # ]
-
-        #("face bounds: {}".format(",".join(vertices)))
-
-    # Rest of the code for processing detected faces
-
-    # if response.error.message:
-    #     raise Exception(
-    #         "{}\nFor more info on error messages, check: "
-    #         "https://cloud.google.com/apis/design/errors".format(response.error.message)
-    #     )
-
-
-
-# detect_faces("""sad.jpg""")
-
-
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all origins
-
-@app.route('/process_url', methods=['POST', 'OPTIONS'])  # Include OPTIONS method
-@cross_origin()  # Allow all origins all methods
-def process_url():
-    if request.method == 'OPTIONS':
-        headers = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Max-Age': '3600'  # Cache preflight response for 1 hour
-        }
-        return ('', 204, headers)  # Respond to preflight request with empty body
-
-    if request.method == 'POST':
-        data = request.get_json()
-        if 'url' in data:
-            url = data['url']
-            detected_faces = detect_faces(url)
-            return jsonify({"face": detected_faces}), 200
-        else:
-            return jsonify({"error": "URL not found in request data."}), 400
+def create_app() -> Flask:
+    """
+    Create and configure the Flask application.
+    
+    Returns:
+        Flask: Configured Flask application
+    """
+    app = Flask(__name__)
+    CORS(app)
+    
+    @app.route('/process_url', methods=['POST', 'OPTIONS'])
+    @cross_origin()
+    def process_url():
+        if request.method == 'OPTIONS':
+            return ('', 204, {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'POST',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Max-Age': '3600'
+            })
+            
+        try:
+            data = request.get_json()
+            if not data or 'url' not in data:
+                return jsonify({"error": "URL not found in request data"}), 400
+                
+            detected_faces = detect_faces(data['url'])
+            return jsonify({"faces": detected_faces}), 200
+            
+        except ValueError as ve:
+            return jsonify({"error": str(ve)}), 400
+        except Exception as e:
+            logger.error(f"Unexpected error: {str(e)}")
+            return jsonify({"error": "Internal server error"}), 500
+    
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)
